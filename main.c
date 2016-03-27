@@ -15,6 +15,7 @@
  -Promeniti baudrate (prepisano od malog robota)
  -Dodati PGM_Mode funkciju i displej :)
  
+ # NAUCITE DA DODAJETE POTPIS FUNKCIJE U HEADER FAJLA GDE KREIRATE NOVU FUNKCIJU KAKO BI ONA ISPRAVNO RADILA!!!
  
  
  
