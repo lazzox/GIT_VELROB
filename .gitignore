@@ -59,3 +59,4 @@ Temporary Items
 *.hex
 *.elf
 *.o
+Debug/Makefile
