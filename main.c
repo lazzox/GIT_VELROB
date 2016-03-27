@@ -94,5 +94,16 @@ int main(void)
 			PID_pravolinijski();
 			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
 		}
+		
+		//PROGRAMMING MODE - kod koji ako je pritisnut CRVENI taster gasi motore
+		while(PGM_Mode() == 1){
+			set_direct_out = 1;
+			PID_brzina_L = 0;
+			PID_brzina_R = 0;
+			//sendMsg("VALJEVAC");
+			//_delay_ms(300);
+		}
+		set_direct_out = 0;
+		
 	}
 }
