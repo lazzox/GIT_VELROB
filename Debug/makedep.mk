@@ -14,9 +14,9 @@ port_driver.c
 
 TC_driver.c
 
-testiranje.c
+funkcije.c
 
 usart_driver.c
 
-X-Drive_Odometry.c
+main.c
 

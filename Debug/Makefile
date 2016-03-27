@@ -43,9 +43,9 @@ C_SRCS +=  \
 ../mechanism.c \
 ../port_driver.c \
 ../TC_driver.c \
-../testiranje.c \
+../funkcije.c \
 ../usart_driver.c \
-../X-Drive_Odometry.c
+../main.c
 
 
 PREPROCESSING_SRCS += 
@@ -61,9 +61,9 @@ interrupt.o \
 mechanism.o \
 port_driver.o \
 TC_driver.o \
-testiranje.o \
+funkcije.o \
 usart_driver.o \
-X-Drive_Odometry.o
+main.o
 
 OBJS_AS_ARGS +=  \
 adc_driver.o \
@@ -72,9 +72,9 @@ interrupt.o \
 mechanism.o \
 port_driver.o \
 TC_driver.o \
-testiranje.o \
+funkcije.o \
 usart_driver.o \
-X-Drive_Odometry.o
+main.o
 
 C_DEPS +=  \
 adc_driver.d \
@@ -83,9 +83,9 @@ interrupt.d \
 mechanism.d \
 port_driver.d \
 TC_driver.d \
-testiranje.d \
+funkcije.d \
 usart_driver.d \
-X-Drive_Odometry.d
+main.d
 
 C_DEPS_AS_ARGS +=  \
 adc_driver.d \
@@ -94,13 +94,13 @@ interrupt.d \
 mechanism.d \
 port_driver.d \
 TC_driver.d \
-testiranje.d \
+funkcije.d \
 usart_driver.d \
-X-Drive_Odometry.d
+main.d
 
-OUTPUT_FILE_PATH +=XDRIVE_TIKVIC_V2.0.elf
+OUTPUT_FILE_PATH +=AXIS_XDRIVE_VELIROB.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=XDRIVE_TIKVIC_V2.0.elf
+OUTPUT_FILE_PATH_AS_ARGS +=AXIS_XDRIVE_VELIROB.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -131,7 +131,7 @@ LIB_DEP+=
 ./%.o: .././%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 3.4.2
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atxmega128a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atxmega128a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
 	@echo Finished building: $<
 	
 
@@ -160,13 +160,13 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR/GNU Linker : 3.4.2
-	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="XDRIVE_TIKVIC_V2.0.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=atxmega128a1 
+	$(QUOTE)D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="AXIS_XDRIVE_VELIROB.map" -Wl,--start-group -Wl,-lm  -Wl,--end-group -Wl,--gc-sections -mrelax -mmcu=atxmega128a1 
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "XDRIVE_TIKVIC_V2.0.elf" "XDRIVE_TIKVIC_V2.0.hex"
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "XDRIVE_TIKVIC_V2.0.elf" "XDRIVE_TIKVIC_V2.0.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "XDRIVE_TIKVIC_V2.0.elf" > "XDRIVE_TIKVIC_V2.0.lss"
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "XDRIVE_TIKVIC_V2.0.elf" "XDRIVE_TIKVIC_V2.0.srec"
-	"C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-size.exe" "XDRIVE_TIKVIC_V2.0.elf"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "AXIS_XDRIVE_VELIROB.elf" "AXIS_XDRIVE_VELIROB.hex"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "AXIS_XDRIVE_VELIROB.elf" "AXIS_XDRIVE_VELIROB.eep" || exit 0
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objdump.exe" -h -S "AXIS_XDRIVE_VELIROB.elf" > "AXIS_XDRIVE_VELIROB.lss"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "AXIS_XDRIVE_VELIROB.elf" "AXIS_XDRIVE_VELIROB.srec"
+	"D:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-size.exe" "AXIS_XDRIVE_VELIROB.elf"
 	
 	
 
@@ -178,5 +178,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "XDRIVE_TIKVIC_V2.0.elf" "XDRIVE_TIKVIC_V2.0.a" "XDRIVE_TIKVIC_V2.0.hex" "XDRIVE_TIKVIC_V2.0.lss" "XDRIVE_TIKVIC_V2.0.eep" "XDRIVE_TIKVIC_V2.0.map" "XDRIVE_TIKVIC_V2.0.srec"
+	rm -rf "AXIS_XDRIVE_VELIROB.elf" "AXIS_XDRIVE_VELIROB.a" "AXIS_XDRIVE_VELIROB.hex" "AXIS_XDRIVE_VELIROB.lss" "AXIS_XDRIVE_VELIROB.eep" "AXIS_XDRIVE_VELIROB.map" "AXIS_XDRIVE_VELIROB.srec"
 	

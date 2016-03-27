@@ -25,7 +25,7 @@ void Podesi_Parametre_Robota(void)
 	krug45 =  krug360 >> 3;			
 
 	smer_zadati = 1;						//1-napred, 2-nazad, 0-sam bira smer
-	zeljena_pravolinijska_brzina = 800;		//brzina kojom se pravo krece robot
+	zeljena_pravolinijska_brzina = 500;		//brzina kojom se pravo krece robot
 	zeljena_brzina_okretanja = 300; //brzina kojom se okrece robot
 	max_brzina_motora = 800;				//eksperimentalno utvrdjena max brzina motora [impuls/vreme_odabiranja(3ms)] (max je oko 1000)
 	
@@ -38,10 +38,10 @@ void Podesi_PID_Pojacanja(void)
 {
 	//PID parametri
 	//Regulacija pravolinijskog kretanja
-	Kp_pravolinijski = 6;		//1.89625
+	Kp_pravolinijski = 2;		//1.89625
 	Ki_pravolinijski = 1.3;
 	Kd_pravolinijski = 125;		//6
-	Kp_teta_pravolinijski = 15;	
+	Kp_teta_pravolinijski = 20;	
 		
 	//Regulacija ugaonog zakretanja
 	Kp_teta = 20;
@@ -50,7 +50,7 @@ void Podesi_PID_Pojacanja(void)
 	Kp_teta_okretanje = 1.5;
 		
 	//Regulacija brzine
-	Kp_brzina = 0.2;	//0.4
+	Kp_brzina = 0.3;	//0.4
 	Ki_brzina = 0;
 	Kd_brzina = 0;
 

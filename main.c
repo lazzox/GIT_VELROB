@@ -1,8 +1,23 @@
 /*
  * X_Drive_Odometry.c
  *
- * Poslednje_izmene: 24/03/2016 20:07:41
- * Autor: Kefa 2
+ * Poslednje_izmene: 27/03/2016 01:47:41
+ * Autor: AXIS team
+ 
+ Izmene:
+ -Dodate funkcije za sendMsg/sendChar
+ -Izbacena inicijalizacija bluetooth-a
+ -PID nije najbolji, ali uvek stigne gde treba :)
+ 
+ 
+ 
+ Potrebne izmene: 
+ -Promeniti baudrate (prepisano od malog robota)
+ -Dodati PGM_Mode funkciju i displej :)
+ 
+ 
+ 
+ 
  */ 
 
 #include <avr/io.h>
@@ -14,7 +29,7 @@
 #include "Headers/globals.h"
 #include "Headers/mechanism.h"
 #include "Headers/hardware.h"
-#include "Headers/testiranje.h"
+#include "Headers/funkcije.h"
 
 volatile signed int
 PID_brzina_L,
@@ -48,15 +63,12 @@ int main(void)
 	Podesi_Interapt();					//podesavanje interapt prioriteta
 	Podesi_Pinove();					//podesavanje I/O pinova
 	Podesi_USART_Komunikaciju();		//podesavanje komunikacije
-	//inicijalizuj_bluetooth();
 	//inicijalizuj_servo_tajmer_20ms();
 	//pomeri_servo_1(0);
-	//sendChar('k');
-	_delay_ms(3000);					//cekanje da se stabilizuje sistem
+	
+	_delay_ms(1000);					//cekanje da se stabilizuje sistem
 	nuliraj_poziciju_robota();
-	//idi_pravo(500,0,0);
-	//CheckInputMotorControl();
-	//zadaj_X_Y_teta(500,0,0,1);
+
 	while(1)
 	{
 		demo_1();

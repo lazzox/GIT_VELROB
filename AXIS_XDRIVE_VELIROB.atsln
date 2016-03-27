@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "XDRIVE_TIKVIC_V2.0", "XDRIVE_TIKVIC_V2.0.cproj", "{ECDCC1D1-B6C1-4CBB-92FD-3B1A42704562}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "AXIS_XDRIVE_VELIROB", "AXIS_XDRIVE_VELIROB.cproj", "{ECDCC1D1-B6C1-4CBB-92FD-3B1A42704562}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

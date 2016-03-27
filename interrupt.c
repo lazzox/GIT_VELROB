@@ -15,7 +15,7 @@
 #include "math.h"
 
 //Tajmer za rad drajvera
-ISR(TCE1_OVF_vect)	//3ms
+ISR(TCE1_OVF_vect)	//1.5ms
 {	
 	vreme_cekanja_tete++;
 	vreme_pozicioniranja++;
