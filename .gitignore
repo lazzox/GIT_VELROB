@@ -58,3 +58,4 @@ Temporary Items
 *.lss
 *.hex
 *.elf
+*.o
