@@ -308,12 +308,12 @@ void Pracenje_pravca(void)
 		{
 			stigao_flag = 1;
 			
-//  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//O
-//  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//K
-//  			USART_TXBuffer_PutByte(&USART_E0_data, 33);	//!
-//  			USART_TXBuffer_PutByte(&USART_E1_data, 79);	//O
-//  			USART_TXBuffer_PutByte(&USART_E1_data, 75);	//K
-//  			USART_TXBuffer_PutByte(&USART_E1_data, 33);	//!
+  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//O
+  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//K
+  			USART_TXBuffer_PutByte(&USART_E0_data, 33);	//!
+  			USART_TXBuffer_PutByte(&USART_E1_data, 79);	//O
+  			USART_TXBuffer_PutByte(&USART_E1_data, 75);	//K
+  			USART_TXBuffer_PutByte(&USART_E1_data, 33);	//!
 		}
 		
 		if (teta_cilj_final != 0xFFFFFFFF)	//ako treba zauzmemo krajnji ugao

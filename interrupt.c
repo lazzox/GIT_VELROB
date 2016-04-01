@@ -1702,3 +1702,12 @@ ISR(PORTB_INT0_vect)
 	USART_TXBuffer_PutByte(&USART_E1_data, 13);	//CR
 }
 
+ISR(TCF0_CCA_vect)
+{
+	//PORTF.OUT |= (1 << 0);
+}
+
+ISR(TCF0_OVF_vect)
+{
+	//PORTF.OUT &= ~(1 << 0);
+}

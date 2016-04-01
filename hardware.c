@@ -197,7 +197,7 @@ void Podesi_USART_Komunikaciju(void)
 	//Aktiviranje RXC interrupt-a
 	USART_RxdInterruptLevel_Set(USART_E0_data.usart, USART_RXCINTLVL_LO_gc);
 	//19200 @ 32Mhz as calculated from ProtoTalk Calc
-	USART_Baudrate_Set(&USARTE0, 3269, -6 ); //9600
+	USART_Baudrate_Set(&USARTE0, 1, 1 ); //9600
 	//Ukljucivanje RX i TX
 	USART_Rx_Enable(USART_E0_data.usart);
 	USART_Tx_Enable(USART_E0_data.usart);

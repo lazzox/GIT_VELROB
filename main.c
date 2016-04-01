@@ -9,8 +9,6 @@
  -Izbacena inicijalizacija bluetooth-a
  -PID nije najbolji, ali uvek stigne gde treba :)
  
- 
- 
  Potrebne izmene: 
  -Promeniti baudrate (prepisano od malog robota)
  -Dodati PGM_Mode funkciju i displej :)
@@ -70,6 +68,10 @@ int main(void)
 	_delay_ms(1000);					//cekanje da se stabilizuje sistem
 	nuliraj_poziciju_robota();
 
+	while(1){
+		_delay_ms(3000);
+		sendChar('L');
+	}
 	while(1)
 	{
 		demo_1();

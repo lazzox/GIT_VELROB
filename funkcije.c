@@ -28,6 +28,8 @@ teta,
 teta_cilj,
 teta_cilj_final;
 
+unsigned long teta_cilj_last_value = 0; //dodao
+
 
 
 void nuliraj_poziciju_robota(void)
@@ -65,24 +67,26 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 	smer_zadati = dir;
 }
 
-void idi_pravo(signed long x, signed long y, unsigned long ugao){
-	//zadaj_X_Y_teta(-500,0,0,2);
+void idi_pravo(signed long x, signed long y, signed long teta_des){
+	if(teta_des)
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
-	teta_cilj_final = (ugao * krug360) / 360;
+	teta_cilj_final = (teta_des * krug360) / 360;
 	smer_zadati = 1;
 }
 
-void idi_unazad(signed long x, signed long y, unsigned long ugao){
-	//zadaj_X_Y_teta(0,0,0,1);
+
+void idi_unazad(signed long x, signed long y, signed long teta_des){
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
-	teta_cilj_final = (ugao * krug360) / 360;
+	teta_cilj_final = (teta_des * krug360) / 360;
 	smer_zadati = 2;
 }
 
+
+
 void rotiraj(){
-	
+	//teta_cilj_last = teta_des;
 }
 
 
@@ -122,15 +126,6 @@ void pomeri_servo_1(uint16_t deg)
 	TCF0.CCA = res;
 }
 
-ISR(TCF0_CCA_vect)
-{
-	PORTF.OUT |= (1 << 0);
-}
-
-ISR(TCF0_OVF_vect)
-{
-	PORTF.OUT &= ~(1 << 0);
-}
 
  void demo_1(void)
  {
