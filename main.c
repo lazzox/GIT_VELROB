@@ -1,5 +1,5 @@
 /*
- * X_Drive_Odometry.c
+ * main.c
  *
  * Poslednje_izmene: 27/03/2016 01:47:41
  * Autor: AXIS team
@@ -7,13 +7,14 @@
  Izmene:
  -Dodate funkcije za sendMsg/sendChar
  -Izbacena inicijalizacija bluetooth-a
+ -Dodat PGM_Mode funkciju
  -PID nije najbolji, ali uvek stigne gde treba :)
  
  
  
  Potrebne izmene: 
  -Promeniti baudrate (prepisano od malog robota)
- -Dodati PGM_Mode funkciju i displej :)
+ -Dodati displej :)
  
  # NAUCITE DA DODAJETE POTPIS FUNKCIJE U HEADER FAJLA GDE KREIRATE NOVU FUNKCIJU KAKO BI ONA ISPRAVNO RADILA!!!
  
@@ -42,6 +43,8 @@ Pe_brzina_R,
 Ie_brzina_L,
 Ie_brzina_R;
 
+volatile unsigned int PRG_flag = 0;
+
 volatile signed long
 rastojanje_cilj,
 PID_teta;
@@ -69,11 +72,31 @@ int main(void)
 	
 	_delay_ms(1000);					//cekanje da se stabilizuje sistem
 	nuliraj_poziciju_robota();
-
+	
+	//zadaj_teta((signed long)(atan2((double)(-500), (double)(-500)) *krug180_PI),0);
 	while(1)
 	{
-		demo_1();
-		//Racunanje trenutne pozicije
+				//CHECK PGM MODE - Uvek mora biti ispred svega!
+		while(PGM_Mode()){
+			set_direct_out = 1;
+			PID_brzina_L = 0;
+			PID_brzina_R = 0;
+			if (!PRG_flag){
+				sendMsg("PGM_Mode");
+				PRG_flag = 1;
+			}
+			_delay_ms(500);
+		}
+		set_direct_out = PRG_flag = 0;
+		
+		//---------------------------------------------------------------------
+		//------------------------------TAKTIKA--------------------------------
+		//---------------------------------------------------------------------
+		kocka();
+		//-------------------------------------
+		//---------------TAKTIKA---------------
+		//-------------------------------------
+		//---------------Racunanje trenutne pozicije---------------
 		if (Rac_tren_poz_sample_counter >= 3){		//9ms   3
 			Rac_tren_poz_sample_counter = 0;
 			Racunanje_trenutne_pozicije();
@@ -92,18 +115,12 @@ int main(void)
 			PID_pozicioni_sample_counter = 0;
 			PID_ugaoni();
 			PID_pravolinijski();
+			
+			
 			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
 		}
 		
-		//PROGRAMMING MODE - kod koji ako je pritisnut CRVENI taster gasi motore
-		while(PGM_Mode() == 1){
-			set_direct_out = 1;
-			PID_brzina_L = 0;
-			PID_brzina_R = 0;
-			//sendMsg("VALJEVAC");
-			//_delay_ms(300);
-		}
-		set_direct_out = 0;
+		
 		
 	}
 }

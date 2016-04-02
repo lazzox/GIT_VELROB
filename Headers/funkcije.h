@@ -28,5 +28,8 @@ void pomeri_servo_1(uint16_t deg);
 void demo_1(void);
 void demo_2(void);
 void demo_3(void);
+void kocka(void);
+void proba (void);
+
 
 #endif /* FUNKCIJE_H_ */
