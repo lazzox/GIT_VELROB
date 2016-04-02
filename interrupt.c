@@ -1642,72 +1642,63 @@ ISR(USARTC0_DRE_vect)
 //Interrupt na taster
 ISR(PORTB_INT0_vect)
 {
-	PORT_TogglePins(&PORTC, 0xFF);
-	//PORT_TogglePins(&PORTF, 0x08);
-	//USART_TXBuffer_PutByte(&USART_C0_data, 43);	//+
-	
-	broj = motor_sample_L16; //ispis zeljene promenljive
-	
-	if(broj	> 0)	
-		USART_TXBuffer_PutByte(&USART_E1_data, 43);	//+
-	else if(broj < 0)	
-		USART_TXBuffer_PutByte(&USART_E1_data, 45);	//-
-	else
-		USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space		
-	if(broj < 0)	//pozitiviziramo broj
-		broj = broj * (-1);	
-	broj1 = broj % 10 | 0x30;	
-	broj = broj / 10;
-	broj10 = broj % 10 | 0x30;
-	broj = broj / 10;
-	broj100 = broj % 10 | 0x30;
-	broj = broj / 10;
-	broj1000 = broj % 10 | 0x30;
-	broj = broj / 10;
-	broj10000 = broj % 10 | 0x30;
-	USART_TXBuffer_PutByte(&USART_E1_data, broj10000);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj1000);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj100);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj10);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj1);
-	USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space		
-	USART_TXBuffer_PutByte(&USART_E1_data, 0x3A);	//:
-	USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space		
-	
-	
-	broj = motor_sample_R16;	//ispis zeljene promenljive
-	
-	if(broj	> 0)	
-		USART_TXBuffer_PutByte(&USART_E1_data, 43);	//+
-	else if(broj < 0)	
-		USART_TXBuffer_PutByte(&USART_E1_data, 45);	//-
-	else
-		USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space	
-	if(broj < 0)	//pozitiviramo broj
-		broj = broj * (-1);
-	broj1 = broj % 10 | 0x30;	
-	broj = broj / 10;
-	broj10 = broj % 10 | 0x30;
-	broj = broj / 10;	
-	broj100 = broj % 10 | 0x30;
-	broj = broj / 10;
-	broj1000 = broj % 10 | 0x30;
-	broj = broj / 10;
-	broj10000 = broj % 10 | 0x30;
-	USART_TXBuffer_PutByte(&USART_E1_data, broj10000);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj1000);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj100);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj10);
-	USART_TXBuffer_PutByte(&USART_E1_data, broj1);
-	USART_TXBuffer_PutByte(&USART_E1_data, 13);	//CR
+// 	PORT_TogglePins(&PORTC, 0xFF);
+// 	//PORT_TogglePins(&PORTF, 0x08);
+// 	//USART_TXBuffer_PutByte(&USART_C0_data, 43);	//+
+// 	
+// 	broj = motor_sample_L16; //ispis zeljene promenljive
+// 	
+// 	if(broj	> 0)	
+// 		USART_TXBuffer_PutByte(&USART_E1_data, 43);	//+
+// 	else if(broj < 0)	
+// 		USART_TXBuffer_PutByte(&USART_E1_data, 45);	//-
+// 	else
+// 		USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space		
+// 	if(broj < 0)	//pozitiviziramo broj
+// 		broj = broj * (-1);	
+// 	broj1 = broj % 10 | 0x30;	
+// 	broj = broj / 10;
+// 	broj10 = broj % 10 | 0x30;
+// 	broj = broj / 10;
+// 	broj100 = broj % 10 | 0x30;
+// 	broj = broj / 10;
+// 	broj1000 = broj % 10 | 0x30;
+// 	broj = broj / 10;
+// 	broj10000 = broj % 10 | 0x30;
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj10000);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj1000);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj100);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj10);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj1);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space		
+// 	USART_TXBuffer_PutByte(&USART_E1_data, 0x3A);	//:
+// 	USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space		
+// 	
+// 	
+// 	broj = motor_sample_R16;	//ispis zeljene promenljive
+// 	
+// 	if(broj	> 0)	
+// 		USART_TXBuffer_PutByte(&USART_E1_data, 43);	//+
+// 	else if(broj < 0)	
+// 		USART_TXBuffer_PutByte(&USART_E1_data, 45);	//-
+// 	else
+// 		USART_TXBuffer_PutByte(&USART_E1_data, 32);	//space	
+// 	if(broj < 0)	//pozitiviramo broj
+// 		broj = broj * (-1);
+// 	broj1 = broj % 10 | 0x30;	
+// 	broj = broj / 10;
+// 	broj10 = broj % 10 | 0x30;
+// 	broj = broj / 10;	
+// 	broj100 = broj % 10 | 0x30;
+// 	broj = broj / 10;
+// 	broj1000 = broj % 10 | 0x30;
+// 	broj = broj / 10;
+// 	broj10000 = broj % 10 | 0x30;
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj10000);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj1000);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj100);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj10);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, broj1);
+// 	USART_TXBuffer_PutByte(&USART_E1_data, 13);	//CR
 }
 
-ISR(TCF0_CCA_vect)
-{
-	//PORTF.OUT |= (1 << 0);
-}
-
-ISR(TCF0_OVF_vect)
-{
-	//PORTF.OUT &= ~(1 << 0);
-}

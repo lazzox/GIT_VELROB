@@ -28,8 +28,6 @@ teta,
 teta_cilj,
 teta_cilj_final;
 
-unsigned long teta_cilj_last_value = 0; //dodao
-
 
 
 void nuliraj_poziciju_robota(void)
@@ -67,27 +65,60 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 	smer_zadati = dir;
 }
 
-void idi_pravo(signed long x, signed long y, signed long teta_des){
-	if(teta_des)
+void idi_pravo(signed long x, signed long y, unsigned long ugao)
+{
+	//if (meca == 1){
+		//zadaj_teta(45,0);
+	//}
+	//else{
+		//zadaj_teta(90,0);
+	//}
+	//if(meca==1){
+		//if (sys_time>2666)
+		//{
+			//X_cilj = x * scale_factor_for_mm;
+			//Y_cilj = y * scale_factor_for_mm;
+			//teta_cilj_final = (ugao * krug360) / 360;
+			//smer_zadati = 1;
+			//sys_time=0;
+		//}	
+	//}	
+	//else if(meca==0 && neca==1 ){
+		//X_cilj = x * scale_factor_for_mm;
+		//Y_cilj = y * scale_factor_for_mm;
+		//teta_cilj_final = (ugao * krug360) / 360;
+		//smer_zadati = 1;
+	//}
+	
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
-	teta_cilj_final = (teta_des * krug360) / 360;
+	
+	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 1;
+
+	//X_cilj = x * scale_factor_for_mm;
+	//Y_cilj = y * scale_factor_for_mm;
+	//teta_cilj_final = (ugao * krug360) / 360;
+	//smer_zadati = 1;
+	
 }
 
 
-void idi_unazad(signed long x, signed long y, signed long teta_des){
+
+
+void idi_unazad(signed long x, signed long y, unsigned long ugao)
+{
+	//zadaj_X_Y_teta(0,0,0,1);
+	
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
-	teta_cilj_final = (teta_des * krug360) / 360;
+	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 2;
 }
 
 
 
-void rotiraj(){
-	//teta_cilj_last = teta_des;
-}
+
 
 
 void sendMsg(char *poruka)
@@ -126,6 +157,15 @@ void pomeri_servo_1(uint16_t deg)
 	TCF0.CCA = res;
 }
 
+ISR(TCF0_CCA_vect)
+{
+	PORTF.OUT |= (1 << 0);
+}
+
+ISR(TCF0_OVF_vect)
+{
+	PORTF.OUT &= ~(1 << 0);
+}
 
  void demo_1(void)
  {
@@ -135,14 +175,14 @@ void pomeri_servo_1(uint16_t deg)
 			if(flag1 == 0)
 			{
 			
-				stigao_flag = 0;
+				stigao_flag0 = 0;
 				flag1 = 1;
-				//zadaj_teta(180,0);
-				idi_pravo(2500,0,90);
+				//zadaj_teta(45,0);
+				idi_pravo(700,0,180);
 			
 				//sendChar('0');
 			}
-			else if(stigao_flag == 1)
+			else if(stigao_flag0 == 1)
 			{
 				step1++;
 				flag1 = 0;
@@ -150,244 +190,180 @@ void pomeri_servo_1(uint16_t deg)
 			}
 			break;
 		
-		case 1:
-			if(sys_time>1533)
-			{
-				if(flag1 == 0)
-				{
-					stigao_flag = 0;
-					flag1 = 1;
-					//idi_pravo(500,0,0);
-					idi_unazad(2500,-500,0);
-			
-					//sendChar('0');
-				}
-				else if(stigao_flag == 1)
-				{
-					step1++;
-					flag1 = 0;
-					sys_time=0;
-				}
-			}
-			break;
-			
-			case 2:
-			if(sys_time>1533)
-			{
-				if(flag1 == 0)
-				{
-					stigao_flag = 0;
-					flag1 = 1;
-					//idi_pravo(500,0,0);
-					idi_pravo(2500,0,0);
-					
-					//sendChar('0');
-				}
-				else if(stigao_flag == 1)
-				{
-					step1++;
-					flag1 = 0;
-					sys_time=0;
-				}
-			}
-			break;
-			
-			case 3:
-			if(sys_time>1533)
-			{
-				if(flag1 == 0)
-				{
-					stigao_flag = 0;
-					flag1 = 1;
-					//idi_pravo(500,0,0);
-					idi_unazad(0,0,0);
-					
-					//sendChar('0');
-				}
-				else if(stigao_flag == 1)
-				{
-					step1++;
-					flag1 = 0;
-					sys_time=0;
-				}
-			}
-			break;
-		
+ 		case 1:
+ 			
+ 				if(flag1 == 0)
+ 				{
+ 					stigao_flag0 = 0;
+ 					flag1 = 1;
+ 					//idi_pravo(500,0,0);
+ 					idi_pravo(700,300,0);
+ 			
+ 					//sendChar('0');
+ 				}
+ 				else if(stigao_flag0 == 1)
+ 				{
+ 					step1++;
+ 					flag1 = 0;
+ 					sys_time=0;
+ 				}
+ 			
+ 			break;
+ 			
+//  			case 2:
+//  			if(sys_time>1533)
+//  			{
+//  				if(flag1 == 0)
+//  				{
+//  					stigao_flag0 = 0;
+//  					flag1 = 1;
+//  					//idi_pravo(500,0,0);
+//  					idi_pravo(2500,0,0);
+//  					
+//  					//sendChar('0');
+//  				}
+//  				else if(stigao_flag0 == 1)
+//  				{
+//  					step1++;
+//  					flag1 = 0;
+//  					sys_time=0;
+//  				}
+//  			}
+//  			break;
+// 			
+// 			case 3:
+// 			if(sys_time>1533)
+// 			{
+// 				if(flag1 == 0)
+// 				{
+// 					stigao_flag0 = 0;
+// 					flag1 = 1;
+// 					//idi_pravo(500,0,0);
+// 					idi_unazad(0,0,0);
+// 					
+// 					//sendChar('0');
+// 				}
+// 				else if(stigao_flag0 == 1)
+// 				{
+// 					step1++;
+// 					flag1 = 0;
+// 					sys_time=0;
+// 				}
+// 			}
+// 			break;
+// 		
 		default:
 		break;
 		
  	}
  }
- 
- void demo_2(void)
- {
- 	
- 		switch(step1)
- 		{
- 			case 0:
- 			if(flag1 == 0){
- 				stigao_flag = 0;
- 				flag1 = 1;
- 				idi_pravo(500,0,0);
-				//zadaj_X_Y(-500,0,2);
-				sendChar('0');
- 			}
- 			else if(stigao_flag == 1){
- 				step1++;
- 				flag1 = 0;
-				
- 			}
- 			break;
 
- 			case 1:
- 			if(flag1 == 0){
-	 			stigao_flag = 0;
-	 			flag1 = 1;
-	 			idi_pravo(500,500,0);
-				// zadaj_X_Y(-500,-500,2);
-	 			sendChar('1');
- 			}
- 			else if(stigao_flag == 1){
-	 			step1++;
-	 			flag1 = 0;
- 			}
- 			break;
- 			
- 			case 2:
- 			if(flag1 == 0){
-	 			stigao_flag = 0;
-	 			flag1 = 1;
-	 			idi_pravo(0,500,0);
-				 //zadaj_X_Y(0,-500,2);
-	 			sendChar('2');
- 			}
- 			else if(stigao_flag == 1){
-	 			step1++;
-	 			flag1 = 0;
- 			}
- 			break;
- 			
- 			case 3:
- 			if(flag1 == 0){
-	 			stigao_flag = 0;
-	 			flag1 = 1;
-	 			idi_pravo(0,0,0);
-				// zadaj_X_Y(0,0,2);
-	 			sendChar('3');
- 			}
- 			else if(stigao_flag == 1){
-	 			step1++;
-	 			flag1 = 0;
- 			}
- 			break;
-			 
-			case 4:
-			if(flag1 == 0){
-				stigao_flag = 0;
-				flag1 = 1;
-				//idi_pravo(0,0,0);
-				zadaj_teta(0,0);
-				sendChar('4');
-			}
-			else if(stigao_flag == 1){
-				step1++;
-				flag1 = 0;
-			}
-			break;
-			 
- 			
- 			default:
- 			break;
- 		}
+void proba (void){
+	switch(step1)
+	{
+		case 0:
+		if(flag1 == 0){
+			stigao_flag0 = 0;
+			flag1 = 1;
+			zadaj_teta(90,0);
+			//idi_pravo(-500,-500,0);
+			// zadaj_X_Y(-500,0,2);
+			sendChar('0');
+		}
+		else if(stigao_flag0 == 1){
+			step1++;
+			flag1 = 0;
+		}
+		break;
+		
+		//case 1:
+		//if(flag1 == 0){
+			//stigao_flag0 = 0;
+			//flag1 = 1;
+			//idi_unazad(0,0,0);
+			//// zadaj_X_Y(-500,0,2);
+			//sendChar('1');
+		//}
+		//else if(stigao_flag0 == 1){
+			//step1++;
+			//flag1 = 0;
+		//}
+		//break;
+		
+		default:
+		break;
+	}
+}
 
- 		
- }
- 
- 
-  void demo_3(void)
-  {
-	  
-	  switch(step1)
-	  {
-		  case 0:
-		  if (sys_time>333)
-		  {
-			  if(flag1 == 0){
-				  stigao_flag = 0;
-				  flag1 = 1;
-				  idi_pravo(500,0,0);
-				  // zadaj_X_Y(-500,0,2);
-				  sendChar('0');
-			  }
-			  else if(stigao_flag == 1){
-				  step1++;
-				  flag1 = 0;
-				  sys_time=0;
-			  }
-		  }
-		  break;
-		  
-		  case 1:
-		  if (sys_time>666)
-		  {
-			  if(flag1 == 0){
-				  stigao_flag = 0;
-				  flag1 = 1;
-				  idi_unazad(500,500,0);
-				  // zadaj_X_Y(-500,0,2);
-				  sendChar('1');
-			  }
-			  else if(stigao_flag == 1){
-				  step1++;
-				  flag1 = 0;
-				  sys_time=0;
-				  
-			  }
-		  }
-		  break;
-		  
-		   case 2:
-		   if (sys_time>666)
-		   {
-			   if(flag1 == 0){
-				   stigao_flag = 0;
-				   flag1 = 1;
-				   idi_unazad(0,500,0);
-				   // zadaj_X_Y(-500,0,2);
-				   sendChar('2');
-			   }
-			   else if(stigao_flag == 1){
-				   step1++;
-				   flag1 = 0;
-				   sys_time=0;
-				   
-			   }
-		   }
-		   break;
-		   
-		   case 3:
-		   if (sys_time>666)
-		   {
-		    if(flag1 == 0){
-			    stigao_flag = 0;
-				    flag1 = 1;
-				    idi_unazad(0,0,0);
-				    // zadaj_X_Y(-500,0,2);
-				    sendChar('3');
-			   }
-			   else if(stigao_flag == 1){
-				    step1++;
-				    flag1 = 0;
-				    sys_time=0;
-				    
-			   }
-		    }
-		    break;
-
-		  default:
-		  break;
-	  }
-
-	  
-  }
-
+void kocka(void)
+{
+	
+	switch(step1)
+	{
+		case 0:
+		if(flag1 == 0){
+			stigao_flag0 = 0;
+			flag1 = 1;
+			idi_pravo(400,0,0);
+			// zadaj_X_Y(-500,0,2);
+			sendChar('0');
+		}
+		else if(stigao_flag0 == 1){
+			step1++;
+			flag1 = 0;
+			sys_time=0;
+		}
+		break;
+		
+		case 1:
+		if(flag1 == 0){
+			stigao_flag0 = 0;
+			flag1 = 1;
+			idi_pravo(400,400,0);
+			// zadaj_X_Y(-500,0,2);
+			sendChar('1');
+		}
+		else if(stigao_flag0 == 1){
+			step1++;
+			flag1 = 0;
+			sys_time=0;
+			
+		}
+		break;
+		
+		case 2:
+		if(flag1 == 0){
+			stigao_flag0 = 0;
+			flag1 = 1;
+			idi_pravo(0,400,0);
+			// zadaj_X_Y(-500,0,2);
+			sendChar('2');
+		}
+		else if(stigao_flag0 == 1){
+			step1++;
+			flag1 = 0;
+			sys_time=0;
+			
+		}
+		break;
+		
+		case 3:
+		if(flag1 == 0){
+			stigao_flag0 = 0;
+			flag1 = 1;
+			idi_pravo(0,0,0);
+			// zadaj_X_Y(-500,0,2);
+			sendChar('3');
+		}
+		else if(stigao_flag0 == 1){
+			step1++;
+			flag1 = 0;
+			sys_time=0;
+			
+		}
+		break;
+		
+		default:
+		break;
+	}
+}

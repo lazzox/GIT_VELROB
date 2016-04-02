@@ -16,21 +16,24 @@
 void Podesi_Parametre_Robota(void)
 {
 	//mehanicke karakteristike
-	metar = 56250; //75000; //broj inkremenata za 1m - eksperiment!      /39035*2 izracunata vrednost 88,5
-	krug360 = 54000; //49650 - eksperiment 1;  //66250 - matematika;	//broj inkremenata za jedan krug - eksperiment!		//13653
+	metar = 57075;		//57000 joxo-treba da je u redu!	 57100 kada su tockvi glibavi				 //75000; //broj inkremenata za 1m - eksperiment!      /39035*2 izracunata vrednost 88,5
+	krug360 = 53250;	//54000	joxo-valja pogledati jos jednom											//49650 - eksperiment 1;  //66250 - matematika;	//broj inkremenata za jedan krug - eksperiment!		//13653
 	
 	scale_factor_for_mm = metar / 1000;
 	krug180 = krug360 >> 1;	
 	krug90 =  krug360 >> 2;
-	krug45 =  krug360 >> 3;			
+	krug45 =  krug360 >> 3;
+	krug180_PI = krug180 / M_PI;	
+	double flag_krug2 = atan2((double)(-500), (double)(-500));
+	flag_krug = (signed long)(flag_krug2 *krug180_PI);
 
 	smer_zadati = 1;						//1-napred, 2-nazad, 0-sam bira smer
-	zeljena_pravolinijska_brzina = 500;		//brzina kojom se pravo krece robot
+	zeljena_pravolinijska_brzina = 450;		//brzina kojom se pravo krece robot
 	zeljena_brzina_okretanja = 300; //brzina kojom se okrece robot
 	max_brzina_motora = 800;				//eksperimentalno utvrdjena max brzina motora [impuls/vreme_odabiranja(3ms)] (max je oko 1000)
 	
 	modifikovana_zeljena_pravolinijska_brzina = zeljena_pravolinijska_brzina;
-	rezervni_ugao = krug45;		//vrednost ugaone greske preko koje se radi reorijentacija robota  
+	rezervni_ugao = krug45/45;		//vrednost ugaone greske preko koje se radi reorijentacija robota  
 	PWM_perioda = 800;			//PWM tajmer broji do 800 - frekvenicja 20KHz
 }
 
@@ -38,19 +41,19 @@ void Podesi_PID_Pojacanja(void)
 {
 	//PID parametri
 	//Regulacija pravolinijskog kretanja
-	Kp_pravolinijski = 2;		//1.89625
-	Ki_pravolinijski = 1.3;
-	Kd_pravolinijski = 125;		//6
-	Kp_teta_pravolinijski = 20;	
-		
+	Kp_pravolinijski = 5;						//5
+	Ki_pravolinijski = 1;						//1
+	Kd_pravolinijski = 150;						//0.2
+	Kp_teta_pravolinijski = 20;					//20	isto kao Kp_teta
+	
 	//Regulacija ugaonog zakretanja
-	Kp_teta = 20;
-	Ki_teta = 1.2;
-	Kd_teta = 20;
-	Kp_teta_okretanje = 1.5;
+	Kp_teta = 10;	//20
+	Ki_teta = 0.5;	//1.2
+	Kd_teta = 20;	//20
+	Kp_teta_okretanje = 1.5;	//ne koristi se nigde u kodu :)
 		
 	//Regulacija brzine
-	Kp_brzina = 0.3;	//0.4
+	Kp_brzina = 0.35;	//Ko menja Kp_brzina ovde treba da promeni i u mechanism.c, ne znam koja linija koda jer jox nema linije na svom kompu
 	Ki_brzina = 0;
 	Kd_brzina = 0;
 
@@ -197,7 +200,7 @@ void Podesi_USART_Komunikaciju(void)
 	//Aktiviranje RXC interrupt-a
 	USART_RxdInterruptLevel_Set(USART_E0_data.usart, USART_RXCINTLVL_LO_gc);
 	//19200 @ 32Mhz as calculated from ProtoTalk Calc
-	USART_Baudrate_Set(&USARTE0, 1, 1 ); //9600
+	USART_Baudrate_Set(&USARTE0, 3269, -6 ); //9600
 	//Ukljucivanje RX i TX
 	USART_Rx_Enable(USART_E0_data.usart);
 	USART_Tx_Enable(USART_E0_data.usart);
@@ -237,7 +240,7 @@ void Podesi_Tajmere(void)
 	
 	//System tajmer za uzorkovanje enkodera i PID regulaciju
 	/* Set period ( TOP value ). */
-	TC_SetPeriod( &TCE1, 0x005F ); //0x00BF = 12ms //0x5F = 6ms //0x2F = 3ms <- Mirko //Nasa -> //0x5DC0
+	TC_SetPeriod( &TCE1, 0x002F ); //0x00BF = 12ms //0x5F = 6ms //0x2F = 3ms <- Mirko //Nasa -> //0x5DC0
 	/* Enable overflow interrupt at low level */
 	TC1_SetOverflowIntLevel( &TCE1, TC_OVFINTLVL_MED_gc );
 	/* Start Timer/Counter. */

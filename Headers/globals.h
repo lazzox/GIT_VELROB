@@ -34,7 +34,9 @@ Ki_teta,
 
 Kp_brzina,
 Ki_brzina,
-Kd_brzina;
+Kd_brzina,
+
+flag_krug;
 
 extern volatile unsigned char
 //regulacija
@@ -43,6 +45,7 @@ stop_PID_desni,
 set_direct_out,
 smer_zadati,
 stigao_flag,
+stigao_flag0,
 struja_L,
 struja_R,
 //komunikacija
@@ -93,7 +96,8 @@ vreme_cekanja_tete,
 vreme_pozicioniranja,
 sys_time,
 Accel_PID_pos,
-fsm_timer;
+fsm_timer,
+meca;
 
 extern volatile signed int
 broj,
@@ -171,6 +175,7 @@ metar,
 krug45,
 krug90,
 krug180,
+krug180_PI,
 krug360;
 							
 #endif /* GLOBALS_H_ */
