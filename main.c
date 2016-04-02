@@ -73,10 +73,9 @@ int main(void)
 	_delay_ms(1000);					//cekanje da se stabilizuje sistem
 	nuliraj_poziciju_robota();
 	
-	//zadaj_teta((signed long)(atan2((double)(-500), (double)(-500)) *krug180_PI),0);
 	while(1)
 	{
-				//CHECK PGM MODE - Uvek mora biti ispred svega!
+	//CHECK PGM MODE - Uvek mora biti ispred svega!
 		while(PGM_Mode()){
 			set_direct_out = 1;
 			PID_brzina_L = 0;
@@ -116,8 +115,6 @@ int main(void)
 			PID_ugaoni();
 			PID_pravolinijski();
 			
-			
-			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
 		}
 		
 		
