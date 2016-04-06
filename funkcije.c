@@ -265,8 +265,8 @@ void proba (void){
 		if(flag1 == 0){
 			stigao_flag0 = 0;
 			flag1 = 1;
-			zadaj_teta(90,0);
-			//idi_pravo(-500,-500,0);
+			
+			idi_pravo(500,500,0);
 			// zadaj_X_Y(-500,0,2);
 			sendChar('0');
 		}
@@ -276,19 +276,19 @@ void proba (void){
 		}
 		break;
 		
-		//case 1:
-		//if(flag1 == 0){
-			//stigao_flag0 = 0;
-			//flag1 = 1;
-			//idi_unazad(0,0,0);
-			//// zadaj_X_Y(-500,0,2);
-			//sendChar('1');
-		//}
-		//else if(stigao_flag0 == 1){
-			//step1++;
-			//flag1 = 0;
-		//}
-		//break;
+		case 1:
+		if(flag1 == 0){
+			stigao_flag0 = 0;
+			flag1 = 1;
+			idi_pravo(800,500,0);
+			// zadaj_X_Y(-500,0,2);
+			sendChar('1');
+		}
+		else if(stigao_flag0 == 1){
+			step1++;
+			flag1 = 0;
+		}
+		break;
 		
 		default:
 		break;

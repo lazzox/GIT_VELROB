@@ -70,12 +70,29 @@ int main(void)
 	//inicijalizuj_servo_tajmer_20ms();
 	//pomeri_servo_1(0);
 	
-	_delay_ms(1000);					//cekanje da se stabilizuje sistem
+	_delay_ms(2000);					//cekanje da se stabilizuje sistem
 	nuliraj_poziciju_robota();
+// 	
+    	while(1)
+    	{
+	    	_delay_ms(2000);
+	    	sendChar('L');
+			sendChar('A');
+			sendChar('Z');
+	    	
+    	}
 	
+	//zadaj_teta((signed long)(atan2((double)(-500), (double)(-500)) *krug180_PI),0);
 	while(1)
 	{
-	//CHECK PGM MODE - Uvek mora biti ispred svega!
+		
+		PORTC.OUT=0x01;
+		PORT_SetPins(&PORTC, 0b00000010);
+// 		_delay_ms(5000);
+// 		sendChar('k');
+		//
+		//
+				//CHECK PGM MODE - Uvek mora biti ispred svega!
 		while(PGM_Mode()){
 			set_direct_out = 1;
 			PID_brzina_L = 0;
@@ -91,7 +108,8 @@ int main(void)
 //---------------------------------------------------------------------//
 //------------------------------TAKTIKA--------------------------------//
 //---------------------------------------------------------------------//
-		kocka();
+		//kocka();
+		//proba();
 //---------------------------------------------------------------------//
 //---------------TAKTIKA-----------------------------------------------//
 //---------------------------------------------------------------------//
@@ -113,11 +131,8 @@ int main(void)
 		if(PID_pozicioni_sample_counter >= 3){		//9ms    3
 			PID_pozicioni_sample_counter = 0;
 			PID_ugaoni();
-			PID_pravolinijski();
-			
+			PID_pravolinijski();			
+			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
 		}
-		
-		
-		
 	}
 }

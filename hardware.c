@@ -183,7 +183,7 @@ void Podesi_USART_Komunikaciju(void)
 	USART_RxdInterruptLevel_Set(USART_E1_data.usart, USART_RXCINTLVL_LO_gc);
 	//Podesavanje Baud rate
 	//USART_Baudrate_Set(&USARTE1, 14, -2 );	//115200
-	USART_Baudrate_Set(&USARTE1,3269, -6 );	//9600
+	USART_Baudrate_Set(&USARTE1,107, -5  );	//9600
 	//Ukljucivanje RX i TX
 	USART_Rx_Enable(USART_E1_data.usart);
 	USART_Tx_Enable(USART_E1_data.usart);
@@ -200,29 +200,29 @@ void Podesi_USART_Komunikaciju(void)
 	//Aktiviranje RXC interrupt-a
 	USART_RxdInterruptLevel_Set(USART_E0_data.usart, USART_RXCINTLVL_LO_gc);
 	//19200 @ 32Mhz as calculated from ProtoTalk Calc
-	USART_Baudrate_Set(&USARTE0, 3269, -6 ); //9600
+	USART_Baudrate_Set(&USARTE0, 107, -5); //9600---> 3269, -6      //107, -5---->115200
 	//Ukljucivanje RX i TX
 	USART_Rx_Enable(USART_E0_data.usart);
 	USART_Tx_Enable(USART_E0_data.usart);
 	
 
-	//USART_C0 - Xmega_USB - 115200
-	//PE3 (TXE0) - izlaz
-	PORTC.DIR &= PIN3_bm;
-	//PE2 (RXE0) - ulaz
-	PORTC.DIR  |= ~PIN2_bm;
-	//Koriscenje USARTE0 i inicijalizacija buffer-a
-	USART_InterruptDriver_Initialize(&USART_C0_data, &USARTC0, USART_DREINTLVL_LO_gc);
-	//USARTE0, 8 Data bits, No Parity, 1 Stop bit.
-	USART_Format_Set(USART_C0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);
-	//Aktiviranje RXC interrupt-a
-	USART_RxdInterruptLevel_Set(USART_C0_data.usart, USART_RXCINTLVL_LO_gc);
-	//Podesavanje Baud rate
-	USART_Baudrate_Set(&USARTC0, 107, -5 );	//115200
-	//USART_Baudrate_Set(&USARTC0, 14, -2 );	//115200
-	//Ukljucivanje RX i TX
-	USART_Rx_Enable(USART_C0_data.usart);
-	USART_Tx_Enable(USART_C0_data.usart);
+	////USART_C0 - Xmega_USB - 115200
+	////PE3 (TXE0) - izlaz
+	//PORTC.DIR &= PIN3_bm;
+	////PE2 (RXE0) - ulaz
+	//PORTC.DIR  |= ~PIN2_bm;
+	////Koriscenje USARTE0 i inicijalizacija buffer-a
+	//USART_InterruptDriver_Initialize(&USART_C0_data, &USARTC0, USART_DREINTLVL_LO_gc);
+	////USARTE0, 8 Data bits, No Parity, 1 Stop bit.
+	//USART_Format_Set(USART_C0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);
+	////Aktiviranje RXC interrupt-a
+	//USART_RxdInterruptLevel_Set(USART_C0_data.usart, USART_RXCINTLVL_LO_gc);
+	////Podesavanje Baud rate
+	//USART_Baudrate_Set(&USARTC0, 107, -5 );	//115200
+	////USART_Baudrate_Set(&USARTC0, 14, -2 );	//115200
+	////Ukljucivanje RX i TX
+	//USART_Rx_Enable(USART_C0_data.usart);
+	//USART_Tx_Enable(USART_C0_data.usart);
 
 }
 
@@ -277,12 +277,23 @@ void Podesi_Pinove(void)
 						false,
 						PORT_OPC_PULLUP_gc,
 						PORT_ISC_FALLING_gc);
+						
+	//PORTC - digitalni izlazi
+						
+	PORT_SetPinsAsOutput(&PORTC,0xFF);
+	PORT_ConfigurePins(&PORTC,
+	0xFF,
+	false,
+	false,
+	PORT_OPC_PULLDOWN_gc,
+	PORT_ISC_BOTHEDGES_gc);
+	PORT_ClearPins(&PORTC, 0xFF);
 	
 	//podesavanje interrupt0 za PORTB.0 - ISR(PORTB_INT0_vect)
 	PORT_ConfigureInterrupt0( &PORTB, PORT_INT0LVL_LO_gc, 0x01 );
 	
 	//PORTC - FET izlazi 
-	PORT_SetPinsAsOutput(&PORTC, 0xFF);
+	//PORT_SetPinsAsOutput(&PORTC, 0xFF);
 //  	PORT_MapVirtualPort0( PORTCFG_VP0MAP_PORTC_gc );	//mapiranje virtualnog porta 0 na PORTC
 //  	PORT_SetDirection( &VPORT0, 0xFF );
 //		VPORT0.OUT = 0x00;	//clear

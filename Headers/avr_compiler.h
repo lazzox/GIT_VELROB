@@ -2,8 +2,8 @@
 #define COMPILER_AVR_H
 
 #ifndef F_CPU
-// Define default CPU frequency (2 MHz), if this is not already defined. 
-#define F_CPU 2000000UL
+// Define default CPU frequency (8 MHz), if this is not already defined. 
+#define F_CPU 8000000UL
 #endif
 
 #include <stdint.h>
