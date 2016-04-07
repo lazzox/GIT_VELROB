@@ -51,6 +51,8 @@ struja_R,
 //komunikacija
 sendArray[128],
 receiveArray[128],
+vreme_primanja,
+okay_flag,
 CHC,
 RX_i_E0,
 RX_i_E1,
@@ -81,6 +83,7 @@ Pracenje_Pravca_sample_counter;
 extern volatile signed char
 smer_trenutni,
 offset; // za ADC
+
 
 extern volatile unsigned int
 broj1, broj10, broj100, broj1000, broj10000,

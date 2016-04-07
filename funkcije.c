@@ -118,18 +118,23 @@ void idi_unazad(signed long x, signed long y, unsigned long ugao)
 
 
 
-
+void SendChar_USB(char c)
+{
+	USARTC0.DATA = c;
+	while(!(USARTC0.STATUS & (1 << 5)));
+}
 
 
 void sendMsg(char *poruka)
 {
 	while(*poruka != '\0'){
-		sendChar(*poruka);
+		SendChar(*poruka);
 		poruka++;
 	}
 }
 
-void sendChar(char c)
+//E0 je komunikacija sa logika plocicom
+void SendChar(char c)
 {
 	USARTE0.DATA = c;
 	while(!(USARTE0.STATUS & (1 << 5)));
@@ -157,15 +162,7 @@ void pomeri_servo_1(uint16_t deg)
 	TCF0.CCA = res;
 }
 
-ISR(TCF0_CCA_vect)
-{
-	PORTF.OUT |= (1 << 0);
-}
 
-ISR(TCF0_OVF_vect)
-{
-	PORTF.OUT &= ~(1 << 0);
-}
 
  void demo_1(void)
  {
@@ -266,9 +263,9 @@ void proba (void){
 			stigao_flag0 = 0;
 			flag1 = 1;
 			
-			idi_pravo(500,500,0);
+			idi_pravo(500,0,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('0');
+			///sendChar('0');
 		}
 		else if(stigao_flag0 == 1){
 			step1++;
@@ -280,9 +277,9 @@ void proba (void){
 		if(flag1 == 0){
 			stigao_flag0 = 0;
 			flag1 = 1;
-			idi_pravo(800,500,0);
+			idi_pravo(0,0,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('1');
+			//sendChar('1');
 		}
 		else if(stigao_flag0 == 1){
 			step1++;

@@ -171,58 +171,35 @@ void Podesi_Oscilator(void)
 void Podesi_USART_Komunikaciju(void)
 {
 	//USART_E1 - BT - 115200
-  	//PE7 (TXE1) - izlaz  
-	PORTE.DIR |= PIN7_bm;
-	//PE6 (RXE1) - ulaz
-	PORTE.DIR  &= ~PIN6_bm;
-	//Koriscenje USARTE1 (definisano u globals.h) i inicijalizacija buffer-a
-	USART_InterruptDriver_Initialize(&USART_E1_data, &USARTE1, USART_DREINTLVL_LO_gc);
-	//USARTE1, 8 Data bits, No Parity, 1 Stop bit.
-	USART_Format_Set(USART_E1_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);
-	//Aktiviranje RXC interrupt-a
-	USART_RxdInterruptLevel_Set(USART_E1_data.usart, USART_RXCINTLVL_LO_gc);
-	//Podesavanje Baud rate
-	//USART_Baudrate_Set(&USARTE1, 14, -2 );	//115200
-	USART_Baudrate_Set(&USARTE1,107, -5  );	//9600
-	//Ukljucivanje RX i TX
-	USART_Rx_Enable(USART_E1_data.usart);
+	PORTE.DIR |= PIN7_bm;//PE7 (TXE1) - izlaz  
+	PORTE.DIR  &= ~PIN6_bm;//PE6 (RXE1) - ulaz
+	USART_InterruptDriver_Initialize(&USART_E1_data, &USARTE1, USART_DREINTLVL_LO_gc);//Koriscenje USARTE1 (definisano u globals.h) i inicijalizacija buffer-a
+	USART_Format_Set(USART_E1_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);//USARTE1, 8 Data bits, No Parity, 1 Stop bit.
+	USART_RxdInterruptLevel_Set(USART_E1_data.usart, USART_RXCINTLVL_LO_gc);//Aktiviranje RXC interrupt-a
+	USART_Baudrate_Set(&USARTE1,107, -5  );//Podesavanje Baud rate	//9600
+	USART_Rx_Enable(USART_E1_data.usart);	//Ukljucivanje RX i TX
 	USART_Tx_Enable(USART_E1_data.usart);
 	
-	//USART_E0 BT_RS232 - MCU - 19200
-	//PE3 (TXE0) - izlaz
-	PORTE.DIR |= PIN3_bm;
-	//PE2 (RXE0) - ulaz
-	PORTE.DIR  &= ~PIN2_bm;
-	//Koriscenje USARTE0 i inicijalizacija buffer-a
-	USART_InterruptDriver_Initialize(&USART_E0_data, &USARTE0, USART_DREINTLVL_LO_gc);
-	//USARTE0, 8 Data bits, No Parity, 1 Stop bit.
-	USART_Format_Set(USART_E0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);
-	//Aktiviranje RXC interrupt-a
-	USART_RxdInterruptLevel_Set(USART_E0_data.usart, USART_RXCINTLVL_LO_gc);
-	//19200 @ 32Mhz as calculated from ProtoTalk Calc
-	USART_Baudrate_Set(&USARTE0, 107, -5); //9600---> 3269, -6      //107, -5---->115200
-	//Ukljucivanje RX i TX
-	USART_Rx_Enable(USART_E0_data.usart);
+	//USART_E0 BT_RS232 - Salje na LOGIKU - 19200
+	PORTE.DIR |= PIN3_bm;//PE3 (TXE0) - izlaz
+	PORTE.DIR  &= ~PIN2_bm;//PE2 (RXE0) - ulaz
+	USART_InterruptDriver_Initialize(&USART_E0_data, &USARTE0, USART_DREINTLVL_LO_gc);//Koriscenje USARTE0 i inicijalizacija buffer-a
+	USART_Format_Set(USART_E0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);//USARTE0, 8 Data bits, No Parity, 1 Stop bit.
+	USART_RxdInterruptLevel_Set(USART_E0_data.usart, USART_RXCINTLVL_LO_gc);//Aktiviranje RXC interrupt-a
+	USART_Baudrate_Set(&USARTE0,12,1);  //9600---> 3269, -6      //107, -5---->115200 //12,1 ----> 19200
+	USART_Rx_Enable(USART_E0_data.usart);//Ukljucivanje RX i TX
 	USART_Tx_Enable(USART_E0_data.usart);
 	
 
-	////USART_C0 - Xmega_USB - 115200
-	////PE3 (TXE0) - izlaz
-	//PORTC.DIR &= PIN3_bm;
-	////PE2 (RXE0) - ulaz
-	//PORTC.DIR  |= ~PIN2_bm;
-	////Koriscenje USARTE0 i inicijalizacija buffer-a
-	//USART_InterruptDriver_Initialize(&USART_C0_data, &USARTC0, USART_DREINTLVL_LO_gc);
-	////USARTE0, 8 Data bits, No Parity, 1 Stop bit.
-	//USART_Format_Set(USART_C0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);
-	////Aktiviranje RXC interrupt-a
-	//USART_RxdInterruptLevel_Set(USART_C0_data.usart, USART_RXCINTLVL_LO_gc);
-	////Podesavanje Baud rate
-	//USART_Baudrate_Set(&USARTC0, 107, -5 );	//115200
-	////USART_Baudrate_Set(&USARTC0, 14, -2 );	//115200
-	////Ukljucivanje RX i TX
-	//USART_Rx_Enable(USART_C0_data.usart);
-	//USART_Tx_Enable(USART_C0_data.usart);
+	//USART_C0 - Xmega_USB - 115200
+	PORTC.DIR &= PIN3_bm;//PE3 (TXE0) - izlaz
+	PORTC.DIR  |= ~PIN2_bm;	//PE2 (RXE0) - ulaz
+	USART_InterruptDriver_Initialize(&USART_C0_data, &USARTC0, USART_DREINTLVL_LO_gc);//Koriscenje USARTE0 i inicijalizacija buffer-a
+	USART_Format_Set(USART_C0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false); 	//USARTE0, 8 Data bits, No Parity, 1 Stop bit.
+	USART_RxdInterruptLevel_Set(USART_C0_data.usart, USART_RXCINTLVL_LO_gc);//Aktiviranje RXC interrupt-a
+	USART_Baudrate_Set(&USARTC0, 107, -5 );	//Podesavanje Baud rate//115200
+	USART_Rx_Enable(USART_C0_data.usart);//Ukljucivanje RX i TX
+	USART_Tx_Enable(USART_C0_data.usart);
 
 }
 

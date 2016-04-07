@@ -20,7 +20,7 @@ ISR(TCE1_OVF_vect)	//1.5ms
 	vreme_cekanja_tete++;
 	vreme_pozicioniranja++;
 	sys_time++;
-	
+	vreme_primanja++;
 	sample_counter_niz_1++;
 	sample_counter_niz_2++;
 	sample_counter_niz_3++;
@@ -67,534 +67,69 @@ ISR(TCE1_OVF_vect)	//1.5ms
 		sample_counter_niz_1 = 0;
 	}
 }
-//Serijska komunikacija - USART_E0 - BT_RS232 - MCU
+
+ISR(TCF0_CCA_vect)
+{
+}
+
+ISR(TCF0_OVF_vect)
+{	
+}
+
+//Serijska komunikacija - PLOCICA ZA LOGIKU
 ISR(USARTE0_RXC_vect)
 {
-	int i;
 	USART_RXComplete(&USART_E0_data);
 	receiveArray[RX_i_E0] = USART_RXBuffer_GetByte(&USART_E0_data);
-	//USART_TXBuffer_PutByte(&USART_E0_data, receiveArray[RX_i_E0]);	//echo
 	RX_i_E0++;
+	vreme_primanja = 0;
 	
-	//vremenska zastita
-	if (RX_i_E0 >= 1)
- 		proveri_vreme_primanja = 1;
-	 
-	 if(receiveArray[0] == 0xEF)
-	 {
-	 		//if(RX_i_E0 == 1)								//stigla je cela poruka (2)
-	 		//{
-				PORTC.OUT=0x01;
-				PORT_SetPins(&PORTC, 0b00000010);
-			//}
+	if(RX_i_E0 > 0){ //Primljeni podaci i spremni za obradu
+		switch(receiveArray[0]){ //Switch u odnosu na prvi znak koji se salje!!
+			case 'A': //A______X
+				if(receiveArray[8] == 'X'){ //idi u tacku primljeno!
+					//parsiraj ovde sve
+					
+					//parsiraj ovde sve
+					RX_i_E0 = 0;
+					okay_flag = 1;
+				
+				}
+			break;
+			
+			
+			case 'I':
+				if(receiveArray[5] == 'D'){
+					//parsiraj ovde sve
+					RX_i_E0;
+				}
+			break;
+			
+			default:
+				RX_i_E0 = 0;
+			break;
+			
+			
+		}
 	}
-
-	
-	//CITANJE PARAMETARA - 1
-// 	if(receiveArray[0] == 1)						//provera funkcijskog bajta >> 1-citanje osnovnih parametara
-// 	{
-// 		if(RX_i_E0 == 1)								//stigla je cela poruka (2)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			
-// 			//if(receiveArray[1] == 1)				//CHC ok
-// 			{
-// 				//Slanje		
-// 				sendArray[0] = receiveArray[0];										//vracamo funkcijski broj
-// 				sendArray[1] = (X_pos / scale_factor_for_mm) >> 8;					//Absolutna X pozicija HI
-// 				sendArray[2] = X_pos / scale_factor_for_mm;							//Absolutna X pozicija LO
-// 				sendArray[3] = (Y_pos / scale_factor_for_mm) >> 8;					//Absolutna Y pozicija HI
-// 				sendArray[4] = Y_pos / scale_factor_for_mm;							//Absolutna Y pozicija LO
-// 				sendArray[5] = ((teta * 360) / krug360) >> 8;						//Teta HI
-// 				sendArray[6] = ((teta * 360) / krug360);							//Teta LO	
-// // 				sendArray[7] = (rastojanje_cilj_temp / scale_factor_for_mm) >> 8;	//Rastojanje od zadate tacke HI
-// // 				sendArray[8] = (rastojanje_cilj_temp / scale_factor_for_mm);		//Rastojanje od zadate tacke LO
-// // 				sendArray[9] = stigao_flag;											//stigao flag
-// // 				sendArray[10] = sample_L16;											//trenutna brzina leva
-// // 				sendArray[11] = sample_R16;											//trenutna brzina desna
-// // 				sendArray[12] =	ADC_ResultCh_GetWord(&ADCA.CH0, offset);			//struja motora 1
-// // 				sendArray[13] =	ADC_ResultCh_GetWord(&ADCA.CH1, offset);			//struja motora 2
-// // 				sendArray[14] =	PORTB.IN;											//digitalni ulazi
-// 				
-// 				//sendArray[15] = 0;													//nuliramo CHC
-// 				i = 0;
-// 				while (i <= 14) 
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[15] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 						i++;
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda				
-// 		}		
-// 	}
-// 	
-// 	
-// 	else if(receiveArray[0] == 'k')
-// 	{
-// // 		if(RX_i_E0 == 1)								//stigla je cela poruka (2)
-// // 		{
-// 			PORTC.OUT=0x01;
-		//	PORT_SetPins(&PORTC, 0b00000010);
-	//	}
-// 	}
-// 	
-// 	
-// 	
-// 	
-// 	//ZADAVANJE X,Y KOORDINATA - 2
-// 	else if(receiveArray[0] == 2)					//provera funkcijskog bajta >> 2-upis x,y koordinate
-// 	{
-// 		if(RX_i_E0 >= 5)							//stigla je cela poruka	(5 bajtova)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			//ENABLE
-// 			stop_PID_desni = 0;
-// 			stop_PID_levi = 0;
-// 			set_direct_out = 0;
-// 			
-// 			X_cilj = 0;
-// 			X_cilj |= ((int)receiveArray[1]) << 8;
-// 			X_cilj |= (int)receiveArray[2];
-// 			X_cilj = (X_cilj * scale_factor_for_mm);
-// 			//Y_cilj
-// 			Y_cilj = 0;
-// 			Y_cilj |= ((int)receiveArray[3]) << 8;
-// 			Y_cilj |= (int)receiveArray[4];
-// 			Y_cilj = Y_cilj * scale_factor_for_mm;
-// 			
-// 			//slanje odgovora
-// 			sendArray[0] = receiveArray[0];	
-// 			i = 0;
-// 			while (i < 1)
-// 			{
-// 				bool byteToBuffer;
-// 				byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 				if(byteToBuffer)
-// 				{
-// 					i++;
-// 				}
-// 			}
-// 			RX_i_E0 = 0;
-// 		}
-// 	}	
-// 	//ZADAVANJE X,Y KOORDINATA I PARAMETRE KRETANJA - 3
-// 	else if(receiveArray[0] == 3)					//provera funkcijskog bajta >> 3 - X,Y koordinate sa svim parametrima kretanja
-// 	{
-// 		if(RX_i_E0 >= 11)							//stigla je cela poruka	(11)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// // 			i = 0;
-// // 			CHC = 0;
-// // 			for(i=0; i<= 4; i++)					//racunanje CHC
-// // 				CHC ^= receiveArray[i];
-// 
-// 			//if(receiveArray[x] == CHC)				//CHC ok
-// 			{
-// 				//x_cilj
-// 				if(!(receiveArray[1] == 0xFF && receiveArray[2] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{
-// 					//ENABLE
-// 					stop_PID_desni = 0;
-// 					stop_PID_levi = 0;
-// 					set_direct_out = 0;
-// 					
-// 					X_cilj = 0;
-// 					X_cilj |= ((int)receiveArray[1]) << 8;
-// 					X_cilj |= (int)receiveArray[2];
-// 					X_cilj = (X_cilj * scale_factor_for_mm);	
-// 				}	
-// 				//Y_cilj
-// 				if(!(receiveArray[3] == 0xFF && receiveArray[4] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{		
-// 					stop_PID_desni = 0;
-// 					stop_PID_levi = 0;	
-// 					set_direct_out = 0;
-// 					Y_cilj = 0;
-// 					Y_cilj |= ((int)receiveArray[3]) << 8;
-// 					Y_cilj |= (int)receiveArray[4];
-// 					Y_cilj = Y_cilj * scale_factor_for_mm;
-// 				}	
-// 				
-// 				//teta_cilj_final_absolute
-// 				if(!(receiveArray[5] == 0xFF && receiveArray[6] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{
-// 					teta_cilj_final = 0;	//i ovde ako se zadaje 0xFF nece se uvazavati ovaj parametar
-// 					teta_cilj_final |= ((int)receiveArray[5]) << 8;
-// 					teta_cilj_final |= (int)receiveArray[6];
-// 					teta_cilj_final = (teta_cilj_final * krug360) / 360;
-// 				}	
-// 				//teta_cilj_final_relative
-// 				else if(!(receiveArray[7] == 0xFF && receiveArray[8] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{
-// 					teta_cilj_final = 0;
-// 					teta_cilj_final |= ((int)receiveArray[7]) << 8;
-// 					teta_cilj_final |= (int)receiveArray[8];
-// 					teta_cilj_final = teta + (teta_cilj_final * krug360) / 360;
-// 				}
-// 				else
-// 					teta_cilj_final = 0xFFFFFFFF;				
-// 				//bzina
-// 				if(receiveArray[9] != 0xFF)	// ako zadajemo 0xFF ne menja se brzina
-// 				{
-// 					zeljena_pravolinijska_brzina = receiveArray[9] * 3;	//podesiti faktor!
-// 					zeljena_brzina_okretanja = zeljena_pravolinijska_brzina / 2;
-// 				}				
-// 				//smer
-// 				if(receiveArray[10] != 0xFF)	// ako zadajemo 0xFF ne menja se smer
-// 					smer_zadati = receiveArray[10];	
-// 				
-// 				//pokretanje snimanja u nizove
-// 				sample_counter_niz_1 = 0;
-// 				niz_counter_niz_1 = 0;	
-// 				sample_counter_niz_2 = 0;
-// 				niz_counter_niz_2 = 0;
-// 				sample_counter_niz_3 = 0;
-// 				niz_counter_niz_3 = 0;		
-// 	
-// 				//slanje odgovora
-// 				i = 0;
-// 				sendArray[0] = receiveArray[0];	
-// 				while (i < 1)
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[1] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 					{
-// 						i++;
-// 					}
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda	
-// 		}					
-// 	}
-// 	//RELATIVNA DISTANCA I UGAO - 4
-// 	else if(receiveArray[0] == 4)					//provera funkcijskog bajta
-// 	{
-// 		if(RX_i_E0 >= 5)								//stigla je cela poruka
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			{
-// 				//ENABLE
-// 				stop_PID_desni = 0;
-// 				stop_PID_levi = 0;
-// 				set_direct_out = 0;
-// 				
-// 				rel_distanca = 0;
-// 				rel_distanca |= ((int)receiveArray[1]) << 8;
-// 				rel_distanca |= (int)receiveArray[2];
-// 				rel_distanca = (rel_distanca * scale_factor_for_mm);
-// 
-// 				rel_ugao = 0;
-// 				rel_ugao |= ((int)receiveArray[3]) << 8;
-// 				rel_ugao |= (int)receiveArray[4];
-// 				rel_ugao = (rel_ugao * krug360) / 360;
-// 		
-// 				//racunanje koordinate
-// 				double X_pos_cos, Y_pos_sin;
-// 				X_pos_cos = (double)(teta + rel_ugao) / krug180;
-// 				Y_pos_sin = (double)(teta + rel_ugao) / krug180;
-// 				X_pos_cos = cos(X_pos_cos * M_PI);
-// 				Y_pos_sin = sin(Y_pos_sin * M_PI);
-// 				X_pos_cos = rel_distanca * X_pos_cos;
-// 				Y_pos_sin = rel_distanca * Y_pos_sin;
-// 		
-// 				X_cilj = X_pos + (signed long)(X_pos_cos);
-// 				Y_cilj = Y_pos + (signed long)(Y_pos_sin);
-// 				
-// 				//slanje odgovora
-// 				i = 0;
-// 				sendArray[0] = receiveArray[0];
-// 				while (i < 1)
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[1] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 					{
-// 						i++;
-// 					}
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda
-// 		}
-// 	}
-// 	//SET DIRECT OUT - 5
-// 	else if(receiveArray[0] == 5)					//provera funkcijskog bajta
-// 	{
-// 		if(RX_i_E0 >= 3)							//stigla je cela poruka
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			{
-// 				//ENABLE
-// 				set_direct_out = 1;
-// 				
-// 				if(receiveArray[1] >= 128)
-// 					PID_brzina_L = (receiveArray[1] - 128) * 5;	//podesiti faktor!
-// 				else
-// 					PID_brzina_L = (128 - receiveArray[1]) * (-5);
-// 					
-// 				if(receiveArray[2] >= 128)
-// 					PID_brzina_R = (receiveArray[2] - 128) * 5;	//podesiti faktor!
-// 				else
-// 					PID_brzina_R = (128 - receiveArray[2]) * (-5);
-// 				
-// 				//slanje odgovora
-// 				i = 0;
-// 				sendArray[0] = receiveArray[0];
-// 				while (i < 1)
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[1] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 					{
-// 						i++;
-// 					}
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda
-// 		}
-// 	}			
-// 	//PODESAVANJE FET izlaza i servoa - 6
-// 	else if(receiveArray[0] == 6)					//provera funkcijskog bajta 
-// 	{
-// 		if(RX_i_E0 >= 7)							//stigla je cela poruka	(11)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			{
-// 				PORTC.OUT |= receiveArray[1] & receiveArray[2];	//izlazi + maska
-// 				PORTC.OUT &= ~(receiveArray[1] ^ receiveArray[2]);	//izlazi + maska
-// 				
-// 				//120 - nulti polozaj, 280 - krajnji polozaj
-// 				TCF0.CCA = receiveArray[3] + 120;
-// 				TCF0.CCB = receiveArray[4] + 120;
-// 				TCF0.CCC = receiveArray[5] + 120;
-// 				TCF0.CCD = receiveArray[6] + 120;
-// 			
-// 				//slanje odgovora
-// 				i = 0;
-// 				sendArray[0] = receiveArray[0];
-// 				while (i < 1)
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[1] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 					{
-// 						i++;
-// 					}
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;	//ako ne valja CHC ponistava se komanda
-// 		}		
-// 	}		
-// 	//Upis trenutne pozicije - 7
-// 	else if(receiveArray[0] == 7)					//provera funkcijskog bajta
-// 	{
-// 		if(RX_i_E0 >= 7)							//stigla je cela poruka	(11)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			{
-// 				//x_pos
-// 				if(!(receiveArray[1] == 0xFF && receiveArray[2] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{
-// 					X_pos = 0;
-// 					X_pos |= ((int)receiveArray[1]) << 8;
-// 					X_pos |= (int)receiveArray[2];
-// 					X_pos = (X_pos * scale_factor_for_mm);
-// 					X_cilj = X_pos;
-// 					X_cilj_stari = X_pos;
-// 				}
-// 				//Y_pos
-// 				if(!(receiveArray[3] == 0xFF && receiveArray[4] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{
-// 					Y_pos = 0;
-// 					Y_pos |= ((int)receiveArray[3]) << 8;
-// 					Y_pos |= (int)receiveArray[4];
-// 					Y_pos = Y_pos * scale_factor_for_mm;
-// 					Y_cilj = Y_pos;
-// 					Y_cilj_stari = Y_pos;
-// 				}
-// 				
-// 				//teta
-// 				if(!(receiveArray[5] == 0xFF && receiveArray[6] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-// 				{
-// 					teta = 0;	//i ovde ako se zadaje 0xFF nece se uvazavati ovaj parametar
-// 					teta |= ((int)receiveArray[5]) << 8;
-// 					teta |= (int)receiveArray[6];
-// 					teta = (teta * krug360) / 360;
-// 					teta_cilj = teta;
-// 				}
-// 				
-// 				//slanje odgovora
-// 				i = 0;
-// 				sendArray[0] = receiveArray[0];
-// 				while (i < 1)
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[1] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 					{
-// 						i++;
-// 					}
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;	//ako ne valja CHC ponistava se komanda
-// 		}
-// 	}
-// 	//Total Stop - 8
-// 	else if(receiveArray[0] == 8)					//provera funkcijskog bajta
-// 	{
-// 		if(RX_i_E0 >= 3)							//stigla je cela poruka
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			{
-// 				
-// 				if(receiveArray[1] == 0x01)
-// 				{
-// 					stop_PID_levi = 1;
-// 					PID_brzina_L = 0;
-// 				}				
-// 				else
-// 					stop_PID_levi = 0;
-// 					
-// 				if(receiveArray[2] == 0x01)
-// 				{
-// 					stop_PID_desni = 1;
-// 					PID_brzina_R = 0;
-// 				}					
-// 				else
-// 					stop_PID_desni = 0;
-// 				
-// 				//slanje odgovora
-// 				i = 0;
-// 				sendArray[0] = receiveArray[0];
-// 				while (i < 1)
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[1] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 					{
-// 						i++;
-// 					}
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda
-// 		}
-// 	}
-// 	//citanje X koordinate
-// 	else if(receiveArray[0] == 101)						//provera funkcijskog bajta >> 101-citanje X pozicije
-// 	{
-// 		if(RX_i_E0 == 1)								//stigla je cela poruka (2)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			
-// 			{
-// 				//Slanje		
-// 				sendArray[0] = receiveArray[0];										//vracamo funkcijski broj
-// 				sendArray[1] = (X_pos / scale_factor_for_mm) >> 8;					//Absolutna X pozicija HI
-// 				sendArray[2] = X_pos / scale_factor_for_mm;							//Absolutna X pozicija LO
-// 				
-// 				i = 0;
-// 				while (i < 3) 
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[15] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 						i++;
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda				
-// 		}		
-// 	}
-// 	//citanje Y koordinate
-// 	else if(receiveArray[0] == 102)						//provera funkcijskog bajta >> 1-citanje osnovnih parametara
-// 	{
-// 		if(RX_i_E0 == 1)								//stigla je cela poruka (2)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			
-// 			//if(receiveArray[1] == 1)				//CHC ok
-// 			{
-// 				//Slanje		
-// 				sendArray[0] = receiveArray[0];										//vracamo funkcijski broj
-// 				sendArray[1] = (Y_pos / scale_factor_for_mm) >> 8;					//Absolutna X pozicija HI
-// 				sendArray[2] = Y_pos / scale_factor_for_mm;							//Absolutna X pozicija LO
-// 				
-// 				i = 0;
-// 				while (i < 3) 
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[15] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 						i++;
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda				
-// 		}		
-// 	}
-// 	//citanje teta abs
-// 	else if(receiveArray[0] == 103)						//provera funkcijskog bajta >> 1-citanje osnovnih parametara
-// 	{
-// 		if(RX_i_E0 == 1)								//stigla je cela poruka (2)
-// 		{
-// 			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			
-// 			//if(receiveArray[1] == 1)				//CHC ok
-// 			{
-// 				//Slanje		
-// 				sendArray[0] = receiveArray[0];										//vracamo funkcijski broj
-// 				sendArray[1] = ((teta * 360) / krug360) >> 8;						//Teta HI
-// 				sendArray[2] = ((teta * 360) / krug360);							//Teta LOW
-// 				
-// 				i = 0;
-// 				while (i < 3) 
-// 				{
-// 					bool byteToBuffer;
-// 					byteToBuffer = USART_TXBuffer_PutByte(&USART_E0_data, sendArray[i]);
-// 					//sendArray[15] ^= sendArray[i];	//CHC
-// 					if(byteToBuffer)
-// 						i++;
-// 				}
-// 				RX_i_E0 = 0;
-// 			}
-// 			RX_i_E0 = 0;		//ako ne valja CHC ponistava se komanda				
-// 		}		
-// 	}
 }
+
 //Serijska komunikacija USART_E1 - BT - bluetooth
 ISR(USARTE1_RXC_vect)
 {	
 	
-	
-	
-	int i;
-	USART_RXComplete(&USART_E1_data);
-	receiveArray[RX_i_E1] = USART_RXBuffer_GetByte(&USART_E1_data);
-	//USART_TXBuffer_PutByte(&USART_E1_data, receiveArray[RX_i_E1]);	//echo
-	RX_i_E1++;
-	
-	//vremenska zastita
-	if (RX_i_E1 >= 1)
- 		proveri_vreme_primanja = 1;
-	 
+	//
+	//
+	//int i;
+	//USART_RXComplete(&USART_E1_data);
+	//receiveArray[RX_i_E1] = USART_RXBuffer_GetByte(&USART_E1_data);
+	////USART_TXBuffer_PutByte(&USART_E1_data, receiveArray[RX_i_E1]);	//echo
+	//RX_i_E1++;
+	//
+	////vremenska zastita
+	//if (RX_i_E1 >= 1)
+ 		//proveri_vreme_primanja = 1;
+	 //
 	//CITANJE PARAMETARA - 1
 	//if(receiveArray[0] == 1)						//provera funkcijskog bajta >> 1-citanje osnovnih parametara
 	//{
@@ -1221,410 +756,409 @@ ISR(USARTE1_RXC_vect)
 		//}
 	//}	
 }
+
 //Serijska komunikacija USART_C0 - BT - XmegaUSB		
 ISR(USARTC0_RXC_vect)
 {
-	int i;
-	USART_RXComplete(&USART_C0_data);
-	receiveArray[RX_i_C0] = USART_RXBuffer_GetByte(&USART_C0_data);
-	//USART_TXBuffer_PutByte(&USART_C0_data, receiveArray[RX_i_C0]);	//echo
-	RX_i_C0++;
-	
-	//vremenska zastita
-	if (RX_i_C0 >= 1)
- 		proveri_vreme_primanja = 1;
-	 
-	//CITANJE PARAMETARA - 1
-	if(receiveArray[0] == 1)						//provera funkcijskog bajta >> 1-citanje osnovnih parametara
-	{
-		if(RX_i_C0 == 1)								//stigla je cela poruka (2)
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			
-			//if(receiveArray[1] == 1)				//CHC ok
-			{
-				//Slanje		
-				sendArray[0] = receiveArray[0];										//vracamo funkcijski broj
-				sendArray[1] = (X_pos / scale_factor_for_mm) >> 8;					//Absolutna X pozicija HI
-				sendArray[2] = X_pos / scale_factor_for_mm;							//Absolutna X pozicija LO
-				sendArray[3] = (Y_pos / scale_factor_for_mm) >> 8;					//Absolutna Y pozicija HI
-				sendArray[4] = Y_pos / scale_factor_for_mm;							//Absolutna Y pozicija LO
-				sendArray[5] = ((teta * 360) / krug360) >> 8;						//Teta HI
-				sendArray[6] = ((teta * 360) / krug360);							//Teta LO	
-				sendArray[7] = (rastojanje_cilj_temp / scale_factor_for_mm) >> 8;	//Rastojanje od zadate tacke HI
-				sendArray[8] = (rastojanje_cilj_temp / scale_factor_for_mm);		//Rastojanje od zadate tacke LO
-				sendArray[9] = stigao_flag;											//stigao flag
-				sendArray[10] = sample_L16;											//trenutna brzina leva
-				sendArray[11] = sample_R16;											//trenutna brzina desna
-				sendArray[12] =	ADC_ResultCh_GetWord(&ADCA.CH0, offset);			//struja motora 1
-				sendArray[13] =	ADC_ResultCh_GetWord(&ADCA.CH1, offset);			//struja motora 2
-				sendArray[14] =	PORTB.IN;											//digitalni ulazi
-				
-				//sendArray[15] = 0;													//nuliramo CHC
-				i = 0;
-				while (i <= 14) 
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[15] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-						i++;
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda				
-		}		
-	}
-	//ZADAVANJE X,Y KOORDINATA - 2
-	else if(receiveArray[0] == 2)					//provera funkcijskog bajta >> 2-upis x,y koordinate
-	{
-		if(RX_i_C0 >= 5)							//stigla je cela poruka	(5 bajtova)
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			//ENABLE
-			stop_PID_desni = 0;
-			stop_PID_levi = 0;
-			set_direct_out = 0;
-			
-			X_cilj = 0;
-			X_cilj |= ((int)receiveArray[1]) << 8;
-			X_cilj |= (int)receiveArray[2];
-			X_cilj = (X_cilj * scale_factor_for_mm);
-			//Y_cilj
-			Y_cilj = 0;
-			Y_cilj |= ((int)receiveArray[3]) << 8;
-			Y_cilj |= (int)receiveArray[4];
-			Y_cilj = Y_cilj * scale_factor_for_mm;
-			
-			//slanje odgovora
-			sendArray[0] = receiveArray[0];	
-			i = 0;
-			while (i < 1)
-			{
-				bool byteToBuffer;
-				byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-				if(byteToBuffer)
-				{
-					i++;
-				}
-			}
-			RX_i_C0 = 0;
-		}
-	}	
-	//ZADAVANJE X,Y KOORDINATA I PARAMETRE KRETANJA - 3
-	else if(receiveArray[0] == 3)					//provera funkcijskog bajta >> 3 - X,Y koordinate sa svim parametrima kretanja
-	{
-		if(RX_i_C0 >= 11)							//stigla je cela poruka	(11)
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			{
-				//x_cilj
-				if(!(receiveArray[1] == 0xFF && receiveArray[2] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{
-					//ENABLE
-					stop_PID_desni = 0;
-					stop_PID_levi = 0;
-					set_direct_out = 0;
-					
-					X_cilj = 0;
-					X_cilj |= ((int)receiveArray[1]) << 8;
-					X_cilj |= (int)receiveArray[2];
-					X_cilj = (X_cilj * scale_factor_for_mm);	
-				}	
-				//Y_cilj
-				if(!(receiveArray[3] == 0xFF && receiveArray[4] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{		
-					stop_PID_desni = 0;
-					stop_PID_levi = 0;	
-					set_direct_out = 0;
-					Y_cilj = 0;
-					Y_cilj |= ((int)receiveArray[3]) << 8;
-					Y_cilj |= (int)receiveArray[4];
-					Y_cilj = Y_cilj * scale_factor_for_mm;
-				}	
-				
-				//teta_cilj_final_absolute
-				if(!(receiveArray[5] == 0xFF && receiveArray[6] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{
-					teta_cilj_final = 0;	//i ovde ako se zadaje 0xFF nece se uvazavati ovaj parametar
-					teta_cilj_final |= ((int)receiveArray[5]) << 8;
-					teta_cilj_final |= (int)receiveArray[6];
-					teta_cilj_final = (teta_cilj_final * krug360) / 360;
-				}	
-				//teta_cilj_final_relative
-				else if(!(receiveArray[7] == 0xFF && receiveArray[8] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{
-					teta_cilj_final = 0;
-					teta_cilj_final |= ((int)receiveArray[7]) << 8;
-					teta_cilj_final |= (int)receiveArray[8];
-					teta_cilj_final = teta + (teta_cilj_final * krug360) / 360;
-				}
-				else
-					teta_cilj_final = 0xFFFFFFFF;				
-				//bzina
-				if(receiveArray[9] != 0xFF)	// ako zadajemo 0xFF ne menja se brzina
-				{
-					zeljena_pravolinijska_brzina = receiveArray[9] * 3;	//podesiti faktor!
-					zeljena_brzina_okretanja = zeljena_pravolinijska_brzina / 2;
-				}				
-				//smer
-				if(receiveArray[10] != 0xFF)	// ako zadajemo 0xFF ne menja se smer
-					smer_zadati = receiveArray[10];	
-				
-				//pokretanje snimanja u nizove
-				sample_counter_niz_1 = 0;
-				niz_counter_niz_1 = 0;	
-				sample_counter_niz_2 = 0;
-				niz_counter_niz_2 = 0;
-				sample_counter_niz_3 = 0;
-				niz_counter_niz_3 = 0;		
-	
-				//slanje odgovora
-				i = 0;
-				sendArray[0] = receiveArray[0];	
-				while (i < 1)
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[1] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-					{
-						i++;
-					}
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda	
-		}					
-	}
-	//RELATIVNA DISTANCA I UGAO - 4
-	else if(receiveArray[0] == 4)					//provera funkcijskog bajta
-	{
-		if(RX_i_C0 >= 5)								//stigla je cela poruka
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			{
-				//ENABLE
-				stop_PID_desni = 0;
-				stop_PID_levi = 0;
-				set_direct_out = 0;
-				
-				rel_distanca = 0;
-				rel_distanca |= ((int)receiveArray[1]) << 8;
-				rel_distanca |= (int)receiveArray[2];
-				rel_distanca = (rel_distanca * scale_factor_for_mm);
-
-				rel_ugao = 0;
-				rel_ugao |= ((int)receiveArray[3]) << 8;
-				rel_ugao |= (int)receiveArray[4];
-				rel_ugao = (rel_ugao * krug360) / 360;
-		
-				//racunanje koordinate
-				double X_pos_cos, Y_pos_sin;
-				//X_pos_cos = (double)(teta + rel_ugao) / krug180;
-				//Y_pos_sin = (double)(teta + rel_ugao) / krug180;
-				X_pos_cos = cos(((teta + rel_ugao) / krug180) * M_PI);
-				Y_pos_sin = sin(((teta + rel_ugao) / krug180) * M_PI);
-				X_pos_cos = rel_distanca * X_pos_cos;
-				Y_pos_sin = rel_distanca * Y_pos_sin;
-		
-				X_cilj = X_pos + (signed long)(X_pos_cos);
-				Y_cilj = Y_pos + (signed long)(Y_pos_sin);
-				
-				//slanje odgovora
-				i = 0;
-				sendArray[0] = receiveArray[0];
-				while (i < 1)
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[1] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-					{
-						i++;
-					}
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda
-		}
-	}
-	//SET DIRECT OUT - 5
-	else if(receiveArray[0] == 5)					//provera funkcijskog bajta
-	{
-		if(RX_i_C0 >= 3)							//stigla je cela poruka
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			{
-				//ENABLE
-				set_direct_out = 1;
-				
-				if(receiveArray[1] >= 128)
-					PID_brzina_L = (receiveArray[1] - 128) * 5;	//podesiti faktor!
-				else
-					PID_brzina_L = (128 - receiveArray[1]) * (-5);
-					
-				if(receiveArray[2] >= 128)
-					PID_brzina_R = (receiveArray[2] - 128) * 5;	//podesiti faktor!
-				else
-					PID_brzina_R = (128 - receiveArray[2]) * (-5);
-				
-				//slanje odgovora
-				i = 0;
-				sendArray[0] = receiveArray[0];
-				while (i < 1)
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[1] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-					{
-						i++;
-					}
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda
-		}
-	}			
-	//PODESAVANJE FET izlaza i servoa - 6
-	else if(receiveArray[0] == 6)					//provera funkcijskog bajta 
-	{
-		if(RX_i_C0 >= 7)							//stigla je cela poruka	(11)
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-// 			i = 0;
-// 			CHC = 0;
-// 			for(i=0; i<= 4; i++)					//racunanje CHC
-// 			CHC ^= receiveArray[i];
-
-			//if(receiveArray[x] == CHC)				//CHC ok
-			{
-				PORTC.OUT |= receiveArray[1] & receiveArray[2];	//izlazi + maska
-				PORTC.OUT &= ~(receiveArray[1] ^ receiveArray[2]);	//izlazi + maska
-				
-				//120 - nulti polozaj, 280 - krajnji polozaj
-				TCF0.CCA = receiveArray[3] + 120;
-				TCF0.CCB = receiveArray[4] + 120;
-				TCF0.CCC = receiveArray[5] + 120;
-				TCF0.CCD = receiveArray[6] + 120;
-			
-				//slanje odgovora
-				i = 0;
-				sendArray[0] = receiveArray[0];
-				while (i < 1)
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[1] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-					{
-						i++;
-					}
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;	//ako ne valja CHC ponistava se komanda
-		}		
-	}		
-	//Upis trenutne pozicije - 7
-	else if(receiveArray[0] == 7)					//provera funkcijskog bajta
-	{
-		if(RX_i_C0 >= 7)							//stigla je cela poruka	(11)
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			{
-				//x_pos
-				if(!(receiveArray[1] == 0xFF && receiveArray[2] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{
-					X_pos = 0;
-					X_pos |= ((int)receiveArray[1]) << 8;
-					X_pos |= (int)receiveArray[2];
-					X_pos = (X_pos * scale_factor_for_mm);
-					X_cilj = X_pos;
-					X_cilj_stari = X_pos;
-				}
-				//Y_pos
-				if(!(receiveArray[3] == 0xFF && receiveArray[4] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{
-					Y_pos = 0;
-					Y_pos |= ((int)receiveArray[3]) << 8;
-					Y_pos |= (int)receiveArray[4];
-					Y_pos = Y_cilj * scale_factor_for_mm;
-					Y_cilj = Y_pos;
-					Y_cilj_stari = Y_pos;
-				}
-				
-				//teta
-				if(!(receiveArray[5] == 0xFF && receiveArray[6] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
-				{
-					teta = 0;	//i ovde ako se zadaje 0xFF nece se uvazavati ovaj parametar
-					teta |= ((int)receiveArray[5]) << 8;
-					teta |= (int)receiveArray[6];
-					teta = (teta * krug360) / 360;
-					teta_cilj = teta;
-				}
-				
-				//slanje odgovora
-				i = 0;
-				sendArray[0] = receiveArray[0];
-				while (i < 1)
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[1] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-					{
-						i++;
-					}
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;	//ako ne valja CHC ponistava se komanda
-		}
-	}
-	//Total Stop - 8
-	else if(receiveArray[0] == 8)					//provera funkcijskog bajta
-	{
-		if(RX_i_C0 >= 3)							//stigla je cela poruka
-		{
-			proveri_vreme_primanja = 0;				//zastita iskljucena
-			{
-				
-				if(receiveArray[1] == 0x01)
-				{
-					stop_PID_levi = 1;
-					PID_brzina_L = 0;
-				}				
-				else
-					stop_PID_levi = 0;
-					
-				if(receiveArray[2] == 0x01)
-				{
-					stop_PID_desni = 1;
-					PID_brzina_R = 0;
-				}					
-				else
-					stop_PID_desni = 0;
-				
-				//slanje odgovora
-				i = 0;
-				sendArray[0] = receiveArray[0];
-				while (i < 1)
-				{
-					bool byteToBuffer;
-					byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
-					//sendArray[1] ^= sendArray[i];	//CHC
-					if(byteToBuffer)
-					{
-						i++;
-					}
-				}
-				RX_i_C0 = 0;
-			}
-			RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda
-		}
-	}
+	//int i;
+	//USART_RXComplete(&USART_C0_data);
+	//receiveArray[RX_i_C0] = USART_RXBuffer_GetByte(&USART_C0_data);
+	////USART_TXBuffer_PutByte(&USART_C0_data, receiveArray[RX_i_C0]);	//echo
+	//RX_i_C0++;
+	//
+	////vremenska zastita
+	//if (RX_i_C0 >= 1)
+ 		//proveri_vreme_primanja = 1;
+	 //
+	////CITANJE PARAMETARA - 1
+	//if(receiveArray[0] == 1)						//provera funkcijskog bajta >> 1-citanje osnovnih parametara
+	//{
+		//if(RX_i_C0 == 1)								//stigla je cela poruka (2)
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			//
+			////if(receiveArray[1] == 1)				//CHC ok
+			//{
+				////Slanje		
+				//sendArray[0] = receiveArray[0];										//vracamo funkcijski broj
+				//sendArray[1] = (X_pos / scale_factor_for_mm) >> 8;					//Absolutna X pozicija HI
+				//sendArray[2] = X_pos / scale_factor_for_mm;							//Absolutna X pozicija LO
+				//sendArray[3] = (Y_pos / scale_factor_for_mm) >> 8;					//Absolutna Y pozicija HI
+				//sendArray[4] = Y_pos / scale_factor_for_mm;							//Absolutna Y pozicija LO
+				//sendArray[5] = ((teta * 360) / krug360) >> 8;						//Teta HI
+				//sendArray[6] = ((teta * 360) / krug360);							//Teta LO	
+				//sendArray[7] = (rastojanje_cilj_temp / scale_factor_for_mm) >> 8;	//Rastojanje od zadate tacke HI
+				//sendArray[8] = (rastojanje_cilj_temp / scale_factor_for_mm);		//Rastojanje od zadate tacke LO
+				//sendArray[9] = stigao_flag;											//stigao flag
+				//sendArray[10] = sample_L16;											//trenutna brzina leva
+				//sendArray[11] = sample_R16;											//trenutna brzina desna
+				//sendArray[14] =	PORTB.IN;											//digitalni ulazi
+				//
+				////sendArray[15] = 0;													//nuliramo CHC
+				//i = 0;
+				//while (i <= 14) 
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[15] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+						//i++;
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda				
+		//}		
+	//}
+	////ZADAVANJE X,Y KOORDINATA - 2
+	//else if(receiveArray[0] == 2)					//provera funkcijskog bajta >> 2-upis x,y koordinate
+	//{
+		//if(RX_i_C0 >= 5)							//stigla je cela poruka	(5 bajtova)
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			////ENABLE
+			//stop_PID_desni = 0;
+			//stop_PID_levi = 0;
+			//set_direct_out = 0;
+			//
+			//X_cilj = 0;
+			//X_cilj |= ((int)receiveArray[1]) << 8;
+			//X_cilj |= (int)receiveArray[2];
+			//X_cilj = (X_cilj * scale_factor_for_mm);
+			////Y_cilj
+			//Y_cilj = 0;
+			//Y_cilj |= ((int)receiveArray[3]) << 8;
+			//Y_cilj |= (int)receiveArray[4];
+			//Y_cilj = Y_cilj * scale_factor_for_mm;
+			//
+			////slanje odgovora
+			//sendArray[0] = receiveArray[0];	
+			//i = 0;
+			//while (i < 1)
+			//{
+				//bool byteToBuffer;
+				//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+				//if(byteToBuffer)
+				//{
+					//i++;
+				//}
+			//}
+			//RX_i_C0 = 0;
+		//}
+	//}	
+	////ZADAVANJE X,Y KOORDINATA I PARAMETRE KRETANJA - 3
+	//else if(receiveArray[0] == 3)					//provera funkcijskog bajta >> 3 - X,Y koordinate sa svim parametrima kretanja
+	//{
+		//if(RX_i_C0 >= 11)							//stigla je cela poruka	(11)
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			//{
+				////x_cilj
+				//if(!(receiveArray[1] == 0xFF && receiveArray[2] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{
+					////ENABLE
+					//stop_PID_desni = 0;
+					//stop_PID_levi = 0;
+					//set_direct_out = 0;
+					//
+					//X_cilj = 0;
+					//X_cilj |= ((int)receiveArray[1]) << 8;
+					//X_cilj |= (int)receiveArray[2];
+					//X_cilj = (X_cilj * scale_factor_for_mm);	
+				//}	
+				////Y_cilj
+				//if(!(receiveArray[3] == 0xFF && receiveArray[4] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{		
+					//stop_PID_desni = 0;
+					//stop_PID_levi = 0;	
+					//set_direct_out = 0;
+					//Y_cilj = 0;
+					//Y_cilj |= ((int)receiveArray[3]) << 8;
+					//Y_cilj |= (int)receiveArray[4];
+					//Y_cilj = Y_cilj * scale_factor_for_mm;
+				//}	
+				//
+				////teta_cilj_final_absolute
+				//if(!(receiveArray[5] == 0xFF && receiveArray[6] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{
+					//teta_cilj_final = 0;	//i ovde ako se zadaje 0xFF nece se uvazavati ovaj parametar
+					//teta_cilj_final |= ((int)receiveArray[5]) << 8;
+					//teta_cilj_final |= (int)receiveArray[6];
+					//teta_cilj_final = (teta_cilj_final * krug360) / 360;
+				//}	
+				////teta_cilj_final_relative
+				//else if(!(receiveArray[7] == 0xFF && receiveArray[8] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{
+					//teta_cilj_final = 0;
+					//teta_cilj_final |= ((int)receiveArray[7]) << 8;
+					//teta_cilj_final |= (int)receiveArray[8];
+					//teta_cilj_final = teta + (teta_cilj_final * krug360) / 360;
+				//}
+				//else
+					//teta_cilj_final = 0xFFFFFFFF;				
+				////bzina
+				//if(receiveArray[9] != 0xFF)	// ako zadajemo 0xFF ne menja se brzina
+				//{
+					//zeljena_pravolinijska_brzina = receiveArray[9] * 3;	//podesiti faktor!
+					//zeljena_brzina_okretanja = zeljena_pravolinijska_brzina / 2;
+				//}				
+				////smer
+				//if(receiveArray[10] != 0xFF)	// ako zadajemo 0xFF ne menja se smer
+					//smer_zadati = receiveArray[10];	
+				//
+				////pokretanje snimanja u nizove
+				//sample_counter_niz_1 = 0;
+				//niz_counter_niz_1 = 0;	
+				//sample_counter_niz_2 = 0;
+				//niz_counter_niz_2 = 0;
+				//sample_counter_niz_3 = 0;
+				//niz_counter_niz_3 = 0;		
+	//
+				////slanje odgovora
+				//i = 0;
+				//sendArray[0] = receiveArray[0];	
+				//while (i < 1)
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[1] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+					//{
+						//i++;
+					//}
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda	
+		//}					
+	//}
+	////RELATIVNA DISTANCA I UGAO - 4
+	//else if(receiveArray[0] == 4)					//provera funkcijskog bajta
+	//{
+		//if(RX_i_C0 >= 5)								//stigla je cela poruka
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			//{
+				////ENABLE
+				//stop_PID_desni = 0;
+				//stop_PID_levi = 0;
+				//set_direct_out = 0;
+				//
+				//rel_distanca = 0;
+				//rel_distanca |= ((int)receiveArray[1]) << 8;
+				//rel_distanca |= (int)receiveArray[2];
+				//rel_distanca = (rel_distanca * scale_factor_for_mm);
+//
+				//rel_ugao = 0;
+				//rel_ugao |= ((int)receiveArray[3]) << 8;
+				//rel_ugao |= (int)receiveArray[4];
+				//rel_ugao = (rel_ugao * krug360) / 360;
+		//
+				////racunanje koordinate
+				//double X_pos_cos, Y_pos_sin;
+				////X_pos_cos = (double)(teta + rel_ugao) / krug180;
+				////Y_pos_sin = (double)(teta + rel_ugao) / krug180;
+				//X_pos_cos = cos(((teta + rel_ugao) / krug180) * M_PI);
+				//Y_pos_sin = sin(((teta + rel_ugao) / krug180) * M_PI);
+				//X_pos_cos = rel_distanca * X_pos_cos;
+				//Y_pos_sin = rel_distanca * Y_pos_sin;
+		//
+				//X_cilj = X_pos + (signed long)(X_pos_cos);
+				//Y_cilj = Y_pos + (signed long)(Y_pos_sin);
+				//
+				////slanje odgovora
+				//i = 0;
+				//sendArray[0] = receiveArray[0];
+				//while (i < 1)
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[1] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+					//{
+						//i++;
+					//}
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda
+		//}
+	//}
+	////SET DIRECT OUT - 5
+	//else if(receiveArray[0] == 5)					//provera funkcijskog bajta
+	//{
+		//if(RX_i_C0 >= 3)							//stigla je cela poruka
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			//{
+				////ENABLE
+				//set_direct_out = 1;
+				//
+				//if(receiveArray[1] >= 128)
+					//PID_brzina_L = (receiveArray[1] - 128) * 5;	//podesiti faktor!
+				//else
+					//PID_brzina_L = (128 - receiveArray[1]) * (-5);
+					//
+				//if(receiveArray[2] >= 128)
+					//PID_brzina_R = (receiveArray[2] - 128) * 5;	//podesiti faktor!
+				//else
+					//PID_brzina_R = (128 - receiveArray[2]) * (-5);
+				//
+				////slanje odgovora
+				//i = 0;
+				//sendArray[0] = receiveArray[0];
+				//while (i < 1)
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[1] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+					//{
+						//i++;
+					//}
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda
+		//}
+	//}			
+	////PODESAVANJE FET izlaza i servoa - 6
+	//else if(receiveArray[0] == 6)					//provera funkcijskog bajta 
+	//{
+		//if(RX_i_C0 >= 7)							//stigla je cela poruka	(11)
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+//// 			i = 0;
+//// 			CHC = 0;
+//// 			for(i=0; i<= 4; i++)					//racunanje CHC
+//// 			CHC ^= receiveArray[i];
+//
+			////if(receiveArray[x] == CHC)				//CHC ok
+			//{
+				//PORTC.OUT |= receiveArray[1] & receiveArray[2];	//izlazi + maska
+				//PORTC.OUT &= ~(receiveArray[1] ^ receiveArray[2]);	//izlazi + maska
+				//
+				////120 - nulti polozaj, 280 - krajnji polozaj
+				//TCF0.CCA = receiveArray[3] + 120;
+				//TCF0.CCB = receiveArray[4] + 120;
+				//TCF0.CCC = receiveArray[5] + 120;
+				//TCF0.CCD = receiveArray[6] + 120;
+			//
+				////slanje odgovora
+				//i = 0;
+				//sendArray[0] = receiveArray[0];
+				//while (i < 1)
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[1] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+					//{
+						//i++;
+					//}
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;	//ako ne valja CHC ponistava se komanda
+		//}		
+	//}		
+	////Upis trenutne pozicije - 7
+	//else if(receiveArray[0] == 7)					//provera funkcijskog bajta
+	//{
+		//if(RX_i_C0 >= 7)							//stigla je cela poruka	(11)
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			//{
+				////x_pos
+				//if(!(receiveArray[1] == 0xFF && receiveArray[2] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{
+					//X_pos = 0;
+					//X_pos |= ((int)receiveArray[1]) << 8;
+					//X_pos |= (int)receiveArray[2];
+					//X_pos = (X_pos * scale_factor_for_mm);
+					//X_cilj = X_pos;
+					//X_cilj_stari = X_pos;
+				//}
+				////Y_pos
+				//if(!(receiveArray[3] == 0xFF && receiveArray[4] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{
+					//Y_pos = 0;
+					//Y_pos |= ((int)receiveArray[3]) << 8;
+					//Y_pos |= (int)receiveArray[4];
+					//Y_pos = Y_cilj * scale_factor_for_mm;
+					//Y_cilj = Y_pos;
+					//Y_cilj_stari = Y_pos;
+				//}
+				//
+				////teta
+				//if(!(receiveArray[5] == 0xFF && receiveArray[6] == 0xFF))	//FF se koristi ako ne zelimo da menjamo parametar
+				//{
+					//teta = 0;	//i ovde ako se zadaje 0xFF nece se uvazavati ovaj parametar
+					//teta |= ((int)receiveArray[5]) << 8;
+					//teta |= (int)receiveArray[6];
+					//teta = (teta * krug360) / 360;
+					//teta_cilj = teta;
+				//}
+				//
+				////slanje odgovora
+				//i = 0;
+				//sendArray[0] = receiveArray[0];
+				//while (i < 1)
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[1] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+					//{
+						//i++;
+					//}
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;	//ako ne valja CHC ponistava se komanda
+		//}
+	//}
+	////Total Stop - 8
+	//else if(receiveArray[0] == 8)					//provera funkcijskog bajta
+	//{
+		//if(RX_i_C0 >= 3)							//stigla je cela poruka
+		//{
+			//proveri_vreme_primanja = 0;				//zastita iskljucena
+			//{
+				//
+				//if(receiveArray[1] == 0x01)
+				//{
+					//stop_PID_levi = 1;
+					//PID_brzina_L = 0;
+				//}				
+				//else
+					//stop_PID_levi = 0;
+					//
+				//if(receiveArray[2] == 0x01)
+				//{
+					//stop_PID_desni = 1;
+					//PID_brzina_R = 0;
+				//}					
+				//else
+					//stop_PID_desni = 0;
+				//
+				////slanje odgovora
+				//i = 0;
+				//sendArray[0] = receiveArray[0];
+				//while (i < 1)
+				//{
+					//bool byteToBuffer;
+					//byteToBuffer = USART_TXBuffer_PutByte(&USART_C0_data, sendArray[i]);
+					////sendArray[1] ^= sendArray[i];	//CHC
+					//if(byteToBuffer)
+					//{
+						//i++;
+					//}
+				//}
+				//RX_i_C0 = 0;
+			//}
+			//RX_i_C0 = 0;		//ako ne valja CHC ponistava se komanda
+		//}
+	//}
 }
 
 //DESNI PASIVNi QDEC

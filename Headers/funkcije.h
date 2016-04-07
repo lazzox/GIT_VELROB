@@ -20,8 +20,8 @@ void rotiraj();
 
 void inicijalizuj_bluetooth();
 void sendMsg(char *poruka);
-void sendChar(char c);
-
+void SendChar(char c);
+void SendChar_USB(char c);
 void inicijalizuj_servo_tajmer_20ms();
 void pomeri_servo_1(uint16_t deg);
 

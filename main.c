@@ -56,7 +56,9 @@ int main(void)
 {
 	int msg_counter = 0;
 	int servo_counter = 0;
-	//char servo_flag = 0;
+	okay_flag = 0;
+	vreme_primanja = 0;
+
 	Podesi_Oscilator();					//podesavanje oscilatora
 	Podesi_Parametre_Robota();			//podesavanje broja impulsa u krugu
 	Podesi_PID_Pojacanja();				//podesavanje pojacanja PID regulatora
@@ -67,53 +69,35 @@ int main(void)
 	Podesi_Interapt();					//podesavanje interapt prioriteta
 	Podesi_Pinove();					//podesavanje I/O pinova
 	Podesi_USART_Komunikaciju();		//podesavanje komunikacije
-	//inicijalizuj_servo_tajmer_20ms();
-	//pomeri_servo_1(0);
 	
-	_delay_ms(2000);					//cekanje da se stabilizuje sistem
-	nuliraj_poziciju_robota();
-// 	
-    	while(1)
-    	{
-	    	_delay_ms(2000);
-	    	sendChar('L');
-			sendChar('A');
-			sendChar('Z');
-	    	
-    	}
+	_delay_ms(1000);					//cekanje da se stabilizuje sistem
+	nuliraj_poziciju_robota(); 	
 	
-	//zadaj_teta((signed long)(atan2((double)(-500), (double)(-500)) *krug180_PI),0);
+	//idi_pravo(500,0,0);
 	while(1)
 	{
-		
-		PORTC.OUT=0x01;
-		PORT_SetPins(&PORTC, 0b00000010);
-// 		_delay_ms(5000);
-// 		sendChar('k');
-		//
-		//
-				//CHECK PGM MODE - Uvek mora biti ispred svega!
-		while(PGM_Mode()){
-			set_direct_out = 1;
-			PID_brzina_L = 0;
-			PID_brzina_R = 0;
-			if (!PRG_flag){
-				sendMsg("PGM_Mode");
-				PRG_flag = 1;
-			}
-			_delay_ms(500);
-		}
+		//CHECK PGM MODE - Uvek mora biti ispred svega!
+		//while(PGM_Mode()){
+			//set_direct_out = 1;
+			//PID_brzina_L = 0;
+			//PID_brzina_R = 0;
+				//if (!PRG_flag){
+					//sendMsg("PGM_Mode");
+					//PRG_flag = 1;
+				//}
+			//_delay_ms(500);
+		//}
 		set_direct_out = PRG_flag = 0;
 		
-//---------------------------------------------------------------------//
-//------------------------------TAKTIKA--------------------------------//
-//---------------------------------------------------------------------//
-		//kocka();
-		//proba();
-//---------------------------------------------------------------------//
-//---------------TAKTIKA-----------------------------------------------//
-//---------------------------------------------------------------------//
-//---------------Racunanje trenutne pozicije---------------------------//
+	//---------------------------------------------------------------------//
+	//------------------------------TAKTIKA--------------------------------//
+	//---------------------------------------------------------------------//
+			//kocka();
+			//proba();
+	//---------------------------------------------------------------------//
+	//---------------TAKTIKA-----------------------------------------------//
+	//---------------------------------------------------------------------//
+	//---------------Racunanje trenutne pozicije---------------------------//
 		if (Rac_tren_poz_sample_counter >= 3){		//9ms   3
 			Rac_tren_poz_sample_counter = 0;
 			Racunanje_trenutne_pozicije();
@@ -121,6 +105,7 @@ int main(void)
 		
 		//Korekcija pravca i distance prema cilju
 		if(Pracenje_Pravca_sample_counter >= 30){	//90ms   30
+			
 			msg_counter++;
 			servo_counter++;
 			Pracenje_Pravca_sample_counter = 0;
@@ -133,6 +118,16 @@ int main(void)
 			PID_ugaoni();
 			PID_pravolinijski();			
 			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
+		}
+		
+		if(vreme_primanja > 500){
+			vreme_primanja = 0;
+			RX_i_E0 = 0;
+		}
+		
+		if (okay_flag == 1){
+			SendChar('O');
+			okay_flag = 0;
 		}
 	}
 }

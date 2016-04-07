@@ -45,6 +45,8 @@ struja_R,
 //komunikacija
 sendArray[128],
 receiveArray[128],
+vreme_primanja,
+okay_flag,
 CHC,
 RX_i_E0,
 RX_i_E1,
