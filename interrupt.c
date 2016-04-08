@@ -93,12 +93,17 @@ ISR(USARTE0_RXC_vect)
 			case 'A': //A______X
 				if(receiveArray[7] == 'X'){ //idi u tacku primljeno!
 					//parsiraj ovde sve
-					//X_Received = (unsigned int)(receiveArray[1] <<8);
-					//X_Received &= (unsigned int)receiveArray[2];
-					//Y_Received = (unsigned int)(receiveArray [3] <<8);
-					//Y_Received &=(unsigned int) receiveArray[4];
-					//U_Received = (unsigned int)(receiveArray[5] << 8);
-					//U_Received &= (unsigned int)receiveArray[6];
+					X_Received = receiveArray[1];
+					X_Received <<=  8;
+					X_Received |= receiveArray[2];
+					
+					Y_Received = receiveArray [3];
+					Y_Received <<= 8;
+					Y_Received |= receiveArray[4];
+					
+					U_Received = receiveArray[5] ;
+					U_Received <<=8;
+					U_Received |= receiveArray[6];
 					
 					//SendChar_USB((char)(receiveArray[1] <<8));
 					//SendChar_USB((char)receiveArray[2]);
@@ -106,15 +111,15 @@ ISR(USARTE0_RXC_vect)
 					//SendChar_USB((char)receiveArray[4]);
 					//SendChar_USB((char)(receiveArray[5] <<8));
 					//SendChar_USB((char)receiveArray[6]);
-					SendChar_USB(receiveArray[0]);
-					SendChar_USB(receiveArray[1]);
-					SendChar_USB(receiveArray[2]);
-					SendChar_USB(receiveArray[3]);
-					SendChar_USB(receiveArray[4]);
-					SendChar_USB(receiveArray[5]);
-					SendChar_USB(receiveArray[6]);
-					SendChar_USB(receiveArray[7]);
-					//idi_pravo(X_Received,Y_Received,U_Received);
+					//SendChar_USB(receiveArray[0]);
+					//SendChar_USB(receiveArray[1]);
+					//SendChar_USB(receiveArray[2]);
+					//SendChar_USB(receiveArray[3]);
+					//SendChar_USB(receiveArray[4]);
+					//SendChar_USB(receiveArray[5]);
+					//SendChar_USB(receiveArray[6]);
+					//SendChar_USB(receiveArray[7]);
+					idi_pravo(X_Received,Y_Received,U_Received);
 					//parsiraj ovde sve
 					RX_i_E0 = 0;
 					okay_flag = 1;
