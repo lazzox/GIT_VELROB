@@ -19,12 +19,13 @@
 static char step1 = 0;
 static char flag1 = 0;
 
+
 volatile signed long
+teta,
 X_pos,
 Y_pos,
 X_cilj,
 Y_cilj,
-teta,
 teta_cilj,
 teta_cilj_final;
 
@@ -65,7 +66,7 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 	smer_zadati = dir;
 }
 
-void idi_pravo(signed long x, signed long y, unsigned long ugao)
+void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao)
 {
 	//if (meca == 1){
 		//zadaj_teta(45,0);
@@ -106,7 +107,7 @@ void idi_pravo(signed long x, signed long y, unsigned long ugao)
 
 
 
-void idi_unazad(signed long x, signed long y, unsigned long ugao)
+void idi_unazad(unsigned int x, unsigned int y, unsigned int ugao)
 {
 	//zadaj_X_Y_teta(0,0,0,1);
 	

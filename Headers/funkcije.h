@@ -14,8 +14,8 @@ void nuliraj_poziciju_robota(void);
 void zadaj_X_Y_teta(signed long x, signed long y, signed long teta_des, unsigned char dir);
 void zadaj_X_Y(signed long x, signed long y, unsigned char dir);
 void zadaj_teta(signed long teta_des, unsigned char dir);
-void idi_pravo(signed long x, signed long y, unsigned long ugao);
-void idi_unazad(signed long x, signed long y, unsigned long ugao);
+void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao);
+void idi_unazad( unsigned int x,  unsigned int y,  unsigned int ugao);
 void rotiraj();
 
 void inicijalizuj_bluetooth();

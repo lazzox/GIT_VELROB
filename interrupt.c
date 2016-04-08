@@ -13,6 +13,11 @@
 #include "Headers/mechanism.h"
 #include "Headers/port_driver.h"
 #include "math.h"
+#include "Headers/funkcije.h"
+
+unsigned int X_Received;
+unsigned int Y_Received;
+unsigned int U_Received;
 
 //Tajmer za rad drajvera
 ISR(TCE1_OVF_vect)	//1.5ms
@@ -83,13 +88,33 @@ ISR(USARTE0_RXC_vect)
 	receiveArray[RX_i_E0] = USART_RXBuffer_GetByte(&USART_E0_data);
 	RX_i_E0++;
 	vreme_primanja = 0;
-	
 	if(RX_i_E0 > 0){ //Primljeni podaci i spremni za obradu
 		switch(receiveArray[0]){ //Switch u odnosu na prvi znak koji se salje!!
 			case 'A': //A______X
-				if(receiveArray[8] == 'X'){ //idi u tacku primljeno!
+				if(receiveArray[7] == 'X'){ //idi u tacku primljeno!
 					//parsiraj ovde sve
+					//X_Received = (unsigned int)(receiveArray[1] <<8);
+					//X_Received &= (unsigned int)receiveArray[2];
+					//Y_Received = (unsigned int)(receiveArray [3] <<8);
+					//Y_Received &=(unsigned int) receiveArray[4];
+					//U_Received = (unsigned int)(receiveArray[5] << 8);
+					//U_Received &= (unsigned int)receiveArray[6];
 					
+					//SendChar_USB((char)(receiveArray[1] <<8));
+					//SendChar_USB((char)receiveArray[2]);
+					//SendChar_USB((char)(receiveArray[3] <<8));
+					//SendChar_USB((char)receiveArray[4]);
+					//SendChar_USB((char)(receiveArray[5] <<8));
+					//SendChar_USB((char)receiveArray[6]);
+					SendChar_USB(receiveArray[0]);
+					SendChar_USB(receiveArray[1]);
+					SendChar_USB(receiveArray[2]);
+					SendChar_USB(receiveArray[3]);
+					SendChar_USB(receiveArray[4]);
+					SendChar_USB(receiveArray[5]);
+					SendChar_USB(receiveArray[6]);
+					SendChar_USB(receiveArray[7]);
+					//idi_pravo(X_Received,Y_Received,U_Received);
 					//parsiraj ovde sve
 					RX_i_E0 = 0;
 					okay_flag = 1;
