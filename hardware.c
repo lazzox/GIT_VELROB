@@ -180,20 +180,20 @@ void Podesi_USART_Komunikaciju(void)
 	USART_Rx_Enable(USART_E1_data.usart);	//Ukljucivanje RX i TX
 	USART_Tx_Enable(USART_E1_data.usart);
 	
-	//USART_E0 BT_RS232 - Salje na LOGIKU - 19200
+	//USART_E0 BT_RS232 - Salje na LOGIKU - 56000
 	PORTE.DIR |= PIN3_bm;//PE3 (TXE0) - izlaz
 	PORTE.DIR  &= ~PIN2_bm;//PE2 (RXE0) - ulaz
 	USART_InterruptDriver_Initialize(&USART_E0_data, &USARTE0, USART_DREINTLVL_LO_gc);//Koriscenje USARTE0 i inicijalizacija buffer-a
 	USART_Format_Set(USART_E0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false);//USARTE0, 8 Data bits, No Parity, 1 Stop bit.
 	USART_RxdInterruptLevel_Set(USART_E0_data.usart, USART_RXCINTLVL_LO_gc);//Aktiviranje RXC interrupt-a
-	USART_Baudrate_Set(&USARTE0,107, -5);  //9600---> 3269, -6      //107, -5---->115200 //12,1 ----> 19200
+	USART_Baudrate_Set(&USARTE0,127,-4);  //9600---> 3269, -6      //107, -5---->115200 //12,1 ----> 19200  //127, -4 ---> 56000
 	USART_Rx_Enable(USART_E0_data.usart);//Ukljucivanje RX i TX
 	USART_Tx_Enable(USART_E0_data.usart);
 	
 
 	//USART_C0 - Xmega_USB - 115200
 	PORTC.DIR &= PIN3_bm;//PE3 (TXE0) - izlaz
-	PORTC.DIR  |= ~PIN2_bm;	//PE2 (RXE0) - ulaz
+	PORTC.DIR |= ~PIN2_bm;	//PE2 (RXE0) - ulaz
 	USART_InterruptDriver_Initialize(&USART_C0_data, &USARTC0, USART_DREINTLVL_LO_gc);//Koriscenje USARTE0 i inicijalizacija buffer-a
 	USART_Format_Set(USART_C0_data.usart, USART_CHSIZE_8BIT_gc, USART_PMODE_DISABLED_gc, false); 	//USARTE0, 8 Data bits, No Parity, 1 Stop bit.
 	USART_RxdInterruptLevel_Set(USART_C0_data.usart, USART_RXCINTLVL_LO_gc);//Aktiviranje RXC interrupt-a
@@ -217,7 +217,7 @@ void Podesi_Tajmere(void)
 	
 	//System tajmer za uzorkovanje enkodera i PID regulaciju
 	/* Set period ( TOP value ). */
-	TC_SetPeriod( &TCE1, 0x002F ); //0x00BF = 12ms //0x5F = 6ms //0x2F = 3ms <- Mirko //Nasa -> //0x5DC0
+	TC_SetPeriod( &TCE1, 0x002F ); //0x5F = 3ms //0x2F = 1.5ms Lazzo
 	/* Enable overflow interrupt at low level */
 	TC1_SetOverflowIntLevel( &TCE1, TC_OVFINTLVL_MED_gc );
 	/* Start Timer/Counter. */

@@ -104,9 +104,6 @@ void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao)
 	
 }
 
-
-
-
 void idi_unazad(unsigned int x, unsigned int y, unsigned int ugao)
 {
 	//zadaj_X_Y_teta(0,0,0,1);
@@ -117,14 +114,11 @@ void idi_unazad(unsigned int x, unsigned int y, unsigned int ugao)
 	smer_zadati = 2;
 }
 
-
-
 void SendChar_USB(char c)
 {
 	USARTC0.DATA = c;
 	while(!(USARTC0.STATUS & (1 << 5)));
 }
-
 
 void sendMsg(char *poruka)
 {
@@ -143,8 +137,6 @@ void SendChar(char c)
 
 void inicijalizuj_servo_tajmer_20ms()
 {
-	PORTF.DIR |= (1 << 0);	//servo 1
-	
 	//Clock source = 32/4 MHz = 8 MHz
 	TCF0.CTRLA |= (1 << 2 | 1 << 0);						//Set presclaer to 64, PER 2500 = 20 ms
 	TCF0.CTRLB |= (0x0F << 4 | 0x03 << 0);					//Enable Capture/compare A,B,C,D and select single slope PWM
@@ -162,6 +154,38 @@ void pomeri_servo_1(uint16_t deg)
 		res = 250;
 	TCF0.CCA = res;
 }
+
+void pomeri_servo_2(uint16_t deg)
+{
+	uint16_t res = (uint16_t)(deg*(250/180));	//250 cycles for 180 degree turn
+	if(res <= 0)
+	res = 125;								//125 cycles for 0 degree turn
+	else if(res > 250)
+	res = 250;
+	TCF0.CCB = res;
+}
+
+void pomeri_servo_3(uint16_t deg)
+{
+	uint16_t res = (uint16_t)(deg*(250/180));	//250 cycles for 180 degree turn
+	if(res <= 0)
+	res = 125;								//125 cycles for 0 degree turn
+	else if(res > 250)
+	res = 250;
+	TCF0.CCC = res;
+}
+
+void pomeri_servo_4(uint16_t deg)
+{
+	uint16_t res = (uint16_t)(deg*(250/180));	//250 cycles for 180 degree turn
+	if(res <= 0)
+	res = 125;								//125 cycles for 0 degree turn
+	else if(res > 250)
+	res = 250;
+	TCF0.CCD = res;
+}
+
+
 
 
 

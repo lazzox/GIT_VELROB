@@ -16,14 +16,16 @@ void zadaj_X_Y(signed long x, signed long y, unsigned char dir);
 void zadaj_teta(signed long teta_des, unsigned char dir);
 void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao);
 void idi_unazad( unsigned int x,  unsigned int y,  unsigned int ugao);
-void rotiraj();
 
-void inicijalizuj_bluetooth();
 void sendMsg(char *poruka);
 void SendChar(char c);
 void SendChar_USB(char c);
+
 void inicijalizuj_servo_tajmer_20ms();
 void pomeri_servo_1(uint16_t deg);
+void pomeri_servo_2(uint16_t deg);
+void pomeri_servo_3(uint16_t deg);
+void pomeri_servo_4(uint16_t deg);
 
 void demo_1(void);
 void demo_2(void);

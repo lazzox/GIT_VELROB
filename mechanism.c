@@ -38,7 +38,7 @@ stop_PID_levi,
 stop_PID_desni,
 set_direct_out,
 smer_zadati,
-stigao_flag = 1,
+stigao_flag = 0,
 stigao_flag0 = 1,
 struja_L,
 struja_R,
@@ -326,7 +326,7 @@ void Pracenje_pravca(void)
 		if (stigao_flag0 == 0)
 		{
 			stigao_flag0 = 1;
-			stigao_flag = 0;
+			stigao_flag = 1;
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//O
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//K
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 33);	//!
@@ -362,15 +362,15 @@ void PID_pravolinijski(void)
 					((float)((metar>>1 ) / zeljena_pravolinijska_brzina));	
 
 	//ogranicenje
-	//if(PID_pozicija < -modifikovana_zeljena_pravolinijska_brzina)
-		//PID_pozicija = -modifikovana_zeljena_pravolinijska_brzina;
-	//if(PID_pozicija > modifikovana_zeljena_pravolinijska_brzina)
-		//PID_pozicija = modifikovana_zeljena_pravolinijska_brzina;
+	if(PID_pozicija < -modifikovana_zeljena_pravolinijska_brzina)
+		PID_pozicija = -modifikovana_zeljena_pravolinijska_brzina;
+	if(PID_pozicija > modifikovana_zeljena_pravolinijska_brzina)
+		PID_pozicija = modifikovana_zeljena_pravolinijska_brzina;
 		
-	if(PID_pozicija < -zeljena_pravolinijska_brzina)
-		PID_pozicija = -zeljena_pravolinijska_brzina;
-	if(PID_pozicija > zeljena_pravolinijska_brzina)
-		PID_pozicija = zeljena_pravolinijska_brzina;
+	//if(PID_pozicija < -zeljena_pravolinijska_brzina)
+		//PID_pozicija = -zeljena_pravolinijska_brzina;
+	//if(PID_pozicija > zeljena_pravolinijska_brzina)
+		//PID_pozicija = zeljena_pravolinijska_brzina;
 		
 		
 	//ubrzavanje po rampi
@@ -401,7 +401,7 @@ void PID_ugaoni(void)
 	teta_greska_prethodno = teta_greska; //D dejstvo
 	
 	//korigovanje greske, da bi se roobot uvek okretao u blizem smeru
-	if(teta_greska < -krug180)
+	if(teta_greska <= -krug180)
 		teta_greska += krug360;
 	else if(teta_greska > krug180)
 		teta_greska -= krug360;
@@ -419,15 +419,15 @@ void PID_ugaoni(void)
 	{
 		if(labs(teta_greska) > 500)	//okrecemo se u mestu kad treba
 		{
-			zeljena_pravolinijska_brzina = 0;	//zaustavlja se robot za okretanje u mestu
+			modifikovana_zeljena_pravolinijska_brzina = 0;	//zaustavlja se robot za okretanje u mestu
 			rezervni_ugao = krug45/45;
 			vreme_cekanja_tete = 0;
 		}
 		else if(vreme_cekanja_tete >= 200)
 		{
-			stigao_flag = 2;
+			//stigao_flag = 2;
 			vreme_cekanja_tete = 0;
-			zeljena_pravolinijska_brzina=500;
+			modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
 			Kp_teta=Kp_teta_pravolinijski;
 			
 			

@@ -69,24 +69,29 @@ int main(void)
 	Podesi_Interapt();					//podesavanje interapt prioriteta
 	Podesi_Pinove();					//podesavanje I/O pinova
 	Podesi_USART_Komunikaciju();		//podesavanje komunikacije
+	//inicijalizuj_servo_tajmer_20ms();	//Inicijalizuje tajmer za servoe
+	//Kada se inicijalizuje ovaj tajmer prestane da radi USART za komunikaciju!
 	
 	_delay_ms(1000);					//cekanje da se stabilizuje sistem
 	nuliraj_poziciju_robota(); 	
 	
-	//idi_pravo(500,0,0);
+	SendChar_USB('U');
+	SendChar_USB('U');
+	SendChar_USB('U');
+	
 	while(1)
 	{
 		//CHECK PGM MODE - Uvek mora biti ispred svega!
-		//while(PGM_Mode()){
-			//set_direct_out = 1;
-			//PID_brzina_L = 0;
-			//PID_brzina_R = 0;
-				//if (!PRG_flag){
-					//sendMsg("PGM_Mode");
-					//PRG_flag = 1;
-				//}
-			//_delay_ms(500);
-		//}
+		while(PGM_Mode()){
+			set_direct_out = 1;
+			PID_brzina_L = 0;
+			PID_brzina_R = 0;
+				if (!PRG_flag){
+					sendMsg("PGM_Mode");
+					PRG_flag = 1;
+				}
+			_delay_ms(500);
+		}
 		set_direct_out = PRG_flag = 0;
 		
 	//---------------------------------------------------------------------//
@@ -120,13 +125,32 @@ int main(void)
 			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
 		}
 		
-		if(vreme_primanja > 500){
-			vreme_primanja = 0;
-			RX_i_E0 = 0;
-		}
+		//if(vreme_primanja > 200){
+			//vreme_primanja = 0;
+			//RX_i_E0 = 0;
+		//}
 		
 		if (okay_flag == 1){
 			SendChar('O');
+			SendChar('1');
+			SendChar('2');
+			SendChar('3');
+			SendChar('4');
+			SendChar('5');
+			SendChar('6');
+			SendChar('K');
+			okay_flag = 0;
+		}
+		
+		if (stigao_flag == 1){
+			SendChar('S');
+			SendChar('1');
+			SendChar('2');
+			SendChar('3');
+			SendChar('4');
+			SendChar('5');
+			SendChar('6');
+			SendChar('T');
 			okay_flag = 0;
 		}
 	}
