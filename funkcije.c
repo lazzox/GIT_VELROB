@@ -328,7 +328,7 @@ void kocka(void)
 			flag1 = 1;
 			idi_pravo(400,0,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('0');
+			//sendChar('0');
 		}
 		else if(stigao_flag0 == 1){
 			step1++;
@@ -343,7 +343,7 @@ void kocka(void)
 			flag1 = 1;
 			idi_pravo(400,400,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('1');
+			//sendChar('1');
 		}
 		else if(stigao_flag0 == 1){
 			step1++;
@@ -359,7 +359,7 @@ void kocka(void)
 			flag1 = 1;
 			idi_pravo(0,400,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('2');
+			//sendChar('2');
 		}
 		else if(stigao_flag0 == 1){
 			step1++;
@@ -375,7 +375,7 @@ void kocka(void)
 			flag1 = 1;
 			idi_pravo(0,0,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('3');
+			//sendChar('3');
 		}
 		else if(stigao_flag0 == 1){
 			step1++;

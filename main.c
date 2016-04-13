@@ -78,7 +78,7 @@ int main(void)
 	SendChar_USB('U');
 	SendChar_USB('U');
 	SendChar_USB('U');
-	
+	//zadaj_teta(180,0);
 	while(1)
 	{
 		//CHECK PGM MODE - Uvek mora biti ispred svega!
