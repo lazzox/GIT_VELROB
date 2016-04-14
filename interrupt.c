@@ -86,8 +86,8 @@ ISR(USARTE0_RXC_vect)
 {
 	USART_RXComplete(&USART_E0_data);
 	receiveArray[RX_i_E0] = USART_RXBuffer_GetByte(&USART_E0_data);
-	SendChar_USB((char)RX_i_E0);
-	SendChar_USB(receiveArray[RX_i_E0]);
+	//SendChar_USB((char)RX_i_E0);
+	//SendChar_USB(receiveArray[RX_i_E0]);
 	
 	RX_i_E0++;
 	vreme_primanja = 0;
@@ -107,7 +107,9 @@ ISR(USARTE0_RXC_vect)
 					U_Received = receiveArray[5] ;
 					U_Received <<=8;
 					U_Received |= receiveArray[6];
-
+		
+					stigao_flag = 0;
+					vreme_primanja = 0;
 					idi_pravo(X_Received,Y_Received,U_Received);
 					//parsiraj ovde sve
 					RX_i_E0 = 0;
@@ -135,6 +137,8 @@ ISR(USARTE0_RXC_vect)
 				U_Received <<=8;
 				U_Received |= receiveArray[6];
 				
+				stigao_flag = 0;
+				vreme_primanja = 0;
 				idi_unazad(X_Received,Y_Received,U_Received);
 				
 				RX_i_E0 = 0;

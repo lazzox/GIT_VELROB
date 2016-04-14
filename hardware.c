@@ -47,9 +47,9 @@ void Podesi_PID_Pojacanja(void)
 	Kp_teta_pravolinijski = 20;					//20	isto kao Kp_teta
 	
 	//Regulacija ugaonog zakretanja
-	Kp_teta = 7;	//20
-	Ki_teta = 1;	//1.2
-	Kd_teta = 200;	//20
+	Kp_teta = 10;	//20
+	Ki_teta = 0.5;	//1.2
+	Kd_teta = 20;	//20
 	Kp_teta_okretanje = 1.5;	//ne koristi se nigde u kodu :)
 		
 	//Regulacija brzine

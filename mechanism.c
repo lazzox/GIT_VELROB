@@ -39,7 +39,6 @@ stop_PID_desni,
 set_direct_out,
 smer_zadati,
 stigao_flag = 0,
-stigao_flag0 = 1,
 struja_L,
 struja_R,
 //komunikacija
@@ -256,7 +255,7 @@ void Pracenje_pravca(void)
 	if (X_cilj_stari != X_cilj || Y_cilj_stari != Y_cilj)	
 	{
 		rezervni_ugao = krug45/45;	//precizno se pozicioniramo u mestu
-		stigao_flag0 = 0;
+		stigao_flag = 0;
 	}
 	X_cilj_stari = X_cilj;
 	Y_cilj_stari = Y_cilj;
@@ -268,23 +267,12 @@ void Pracenje_pravca(void)
 	XY_zbir = X_razlika + Y_razlika;
 	rastojanje_cilj_temp = sqrt(XY_zbir);
 	
-	//if(rastojanje_cilj_temp < (metar / 3))
-	//{
-		//Kp_brzina=0.2;
-		//zeljena_pravolinijska_brzina=300;
-	//}
-	//if(rastojanje_cilj_temp > (metar / 3))
-	//{
-		//Kp_brzina=0.35;
-	//}
-	
-	//ako je veca preostala distanca veca od 10 cm onda se radi korrekcija
-	if(rastojanje_cilj_temp > (metar / 4))  // metar/12
+	if(rastojanje_cilj_temp > (metar / 10))  // metar/12
 	{
 		rastojanje_cilj = rastojanje_cilj_temp;
 		translacija = 0;
 		vreme_pozicioniranja = 0;
-		stigao_flag0 = 0;
+		stigao_flag = 0;
 		
 		X_razlika = (X_cilj - X_pos);
 		Y_razlika = (Y_cilj - Y_pos);
@@ -321,11 +309,14 @@ void Pracenje_pravca(void)
 		if(teta_cilj < 0)
 			teta_cilj += krug360;
 	}
-	else if (vreme_pozicioniranja >= 300)	//stigli smo do cilja
+	else if (vreme_pozicioniranja >= 600)	//stigli smo do cilja
 	{
-		if (stigao_flag0 == 0)
+		if (stigao_flag == 0)
 		{
-			stigao_flag0 = 1;
+			SendChar_USB('S');
+			SendChar_USB('t');
+			SendChar_USB('t');
+			SendChar_USB('S');
 			stigao_flag = 1;
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//O
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//K
@@ -415,7 +406,7 @@ void PID_ugaoni(void)
 		teta_greska_sum = -200;
 	
 	//podesavanje pravca robota dok ne stigne u blizinu cilja
-	if(rastojanje_cilj_temp > metar/10)  /// bilo /10 ? 
+	if(rastojanje_cilj_temp > (metar/10))  /// bilo /10 ? 
 	{
 		if(labs(teta_greska) > 500)	//okrecemo se u mestu kad treba
 		{

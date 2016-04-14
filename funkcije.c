@@ -20,14 +20,7 @@ static char step1 = 0;
 static char flag1 = 0;
 
 
-volatile signed long
-teta,
-X_pos,
-Y_pos,
-X_cilj,
-Y_cilj,
-teta_cilj,
-teta_cilj_final;
+
 
 
 
@@ -68,40 +61,11 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 
 void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao)
 {
-	//if (meca == 1){
-		//zadaj_teta(45,0);
-	//}
-	//else{
-		//zadaj_teta(90,0);
-	//}
-	//if(meca==1){
-		//if (sys_time>2666)
-		//{
-			//X_cilj = x * scale_factor_for_mm;
-			//Y_cilj = y * scale_factor_for_mm;
-			//teta_cilj_final = (ugao * krug360) / 360;
-			//smer_zadati = 1;
-			//sys_time=0;
-		//}	
-	//}	
-	//else if(meca==0 && neca==1 ){
-		//X_cilj = x * scale_factor_for_mm;
-		//Y_cilj = y * scale_factor_for_mm;
-		//teta_cilj_final = (ugao * krug360) / 360;
-		//smer_zadati = 1;
-	//}
-	
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 1;
-
-	//X_cilj = x * scale_factor_for_mm;
-	//Y_cilj = y * scale_factor_for_mm;
-	//teta_cilj_final = (ugao * krug360) / 360;
-	//smer_zadati = 1;
-	
 }
 
 void idi_unazad(unsigned int x, unsigned int y, unsigned int ugao)
@@ -197,14 +161,14 @@ void pomeri_servo_4(uint16_t deg)
 			if(flag1 == 0)
 			{
 			
-				stigao_flag0 = 0;
+				stigao_flag = 0;
 				flag1 = 1;
 				//zadaj_teta(45,0);
 				idi_pravo(700,0,180);
 			
 				//sendChar('0');
 			}
-			else if(stigao_flag0 == 1)
+			else if(stigao_flag == 1)
 			{
 				step1++;
 				flag1 = 0;
@@ -216,14 +180,14 @@ void pomeri_servo_4(uint16_t deg)
  			
  				if(flag1 == 0)
  				{
- 					stigao_flag0 = 0;
+ 					stigao_flag = 0;
  					flag1 = 1;
  					//idi_pravo(500,0,0);
  					idi_pravo(700,300,0);
  			
  					//sendChar('0');
  				}
- 				else if(stigao_flag0 == 1)
+ 				else if(stigao_flag == 1)
  				{
  					step1++;
  					flag1 = 0;
@@ -284,32 +248,31 @@ void proba (void){
 	switch(step1)
 	{
 		case 0:
-		if(flag1 == 0){
-			stigao_flag0 = 0;
-			flag1 = 1;
-			
-			idi_pravo(500,0,0);
-			// zadaj_X_Y(-500,0,2);
-			///sendChar('0');
-		}
-		else if(stigao_flag0 == 1){
-			step1++;
-			flag1 = 0;
-		}
+			if(flag1 == 0){
+				stigao_flag = 0;
+				flag1 = 1;
+				idi_pravo(1000,0,0);
+				// zadaj_X_Y(-500,0,2);
+				///sendChar('0');
+			}
+			else if(stigao_flag == 1){
+				step1++;
+				flag1 = 0;
+			}
 		break;
 		
 		case 1:
-		if(flag1 == 0){
-			stigao_flag0 = 0;
-			flag1 = 1;
-			idi_pravo(0,0,0);
-			// zadaj_X_Y(-500,0,2);
-			//sendChar('1');
-		}
-		else if(stigao_flag0 == 1){
-			step1++;
-			flag1 = 0;
-		}
+			if(flag1 == 0){
+				stigao_flag = 0;
+				flag1 = 1;
+				idi_pravo(0,0,0);
+				// zadaj_X_Y(-500,0,2);
+				//sendChar('1');
+			}
+			else if(stigao_flag == 1){
+				step1++;
+				flag1 = 0;
+			}
 		break;
 		
 		default:
@@ -324,13 +287,13 @@ void kocka(void)
 	{
 		case 0:
 		if(flag1 == 0){
-			stigao_flag0 = 0;
+			stigao_flag = 0;
 			flag1 = 1;
 			idi_pravo(400,0,0);
 			// zadaj_X_Y(-500,0,2);
-			//sendChar('0');
+			sendChar('0');
 		}
-		else if(stigao_flag0 == 1){
+		else if(stigao_flag == 1){
 			step1++;
 			flag1 = 0;
 			sys_time=0;
@@ -339,13 +302,13 @@ void kocka(void)
 		
 		case 1:
 		if(flag1 == 0){
-			stigao_flag0 = 0;
+			stigao_flag = 0;
 			flag1 = 1;
 			idi_pravo(400,400,0);
 			// zadaj_X_Y(-500,0,2);
-			//sendChar('1');
+			sendChar('1');
 		}
-		else if(stigao_flag0 == 1){
+		else if(stigao_flag == 1){
 			step1++;
 			flag1 = 0;
 			sys_time=0;
@@ -355,13 +318,13 @@ void kocka(void)
 		
 		case 2:
 		if(flag1 == 0){
-			stigao_flag0 = 0;
+			stigao_flag = 0;
 			flag1 = 1;
 			idi_pravo(0,400,0);
 			// zadaj_X_Y(-500,0,2);
-			//sendChar('2');
+			sendChar('2');
 		}
-		else if(stigao_flag0 == 1){
+		else if(stigao_flag == 1){
 			step1++;
 			flag1 = 0;
 			sys_time=0;
@@ -371,13 +334,13 @@ void kocka(void)
 		
 		case 3:
 		if(flag1 == 0){
-			stigao_flag0 = 0;
+			stigao_flag = 0;
 			flag1 = 1;
 			idi_pravo(0,0,0);
 			// zadaj_X_Y(-500,0,2);
-			//sendChar('3');
+			sendChar('3');
 		}
-		else if(stigao_flag0 == 1){
+		else if(stigao_flag == 1){
 			step1++;
 			flag1 = 0;
 			sys_time=0;

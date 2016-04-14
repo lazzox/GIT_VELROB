@@ -78,7 +78,13 @@ int main(void)
 	SendChar_USB('U');
 	SendChar_USB('U');
 	SendChar_USB('U');
-	//zadaj_teta(180,0);
+	
+	SendChar_USB(sizeof(int));
+	SendChar_USB(sizeof(long));
+	SendChar_USB(sizeof(double));
+	SendChar_USB(sizeof(long double));
+	SendChar_USB(sizeof(long long));
+	
 	while(1)
 	{
 		//CHECK PGM MODE - Uvek mora biti ispred svega!
@@ -98,7 +104,7 @@ int main(void)
 	//------------------------------TAKTIKA--------------------------------//
 	//---------------------------------------------------------------------//
 			//kocka();
-			//proba();
+			proba();
 	//---------------------------------------------------------------------//
 	//---------------TAKTIKA-----------------------------------------------//
 	//---------------------------------------------------------------------//
@@ -151,7 +157,6 @@ int main(void)
 			SendChar('5');
 			SendChar('6');
 			SendChar('T');
-			okay_flag = 0;
 		}
 	}
 }
