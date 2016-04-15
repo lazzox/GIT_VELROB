@@ -45,6 +45,7 @@ stop_PID_desni,
 set_direct_out,
 smer_zadati,
 stigao_flag,
+stigao_sigurnosni,
 struja_L,
 struja_R,
 //komunikacija

@@ -45,9 +45,7 @@ Ie_brzina_R;
 
 volatile unsigned int PRG_flag = 0;
 
-volatile signed long
-rastojanje_cilj,
-PID_teta;
+
 
 volatile float
 sharp1_value;
@@ -58,7 +56,8 @@ int main(void)
 	int servo_counter = 0;
 	okay_flag = 0;
 	vreme_primanja = 0;
-
+	stigao_sigurnosni = 0;
+	
 	Podesi_Oscilator();					//podesavanje oscilatora
 	Podesi_Parametre_Robota();			//podesavanje broja impulsa u krugu
 	Podesi_PID_Pojacanja();				//podesavanje pojacanja PID regulatora
@@ -85,6 +84,9 @@ int main(void)
 	SendChar_USB(sizeof(long double));
 	SendChar_USB(sizeof(long long));
 	
+	//idi_pravo(600,0,0);
+	//zadaj_teta(90,0);
+	
 	while(1)
 	{
 		//CHECK PGM MODE - Uvek mora biti ispred svega!
@@ -104,7 +106,7 @@ int main(void)
 	//------------------------------TAKTIKA--------------------------------//
 	//---------------------------------------------------------------------//
 			//kocka();
-			proba();
+			//proba();
 	//---------------------------------------------------------------------//
 	//---------------TAKTIKA-----------------------------------------------//
 	//---------------------------------------------------------------------//
@@ -157,6 +159,7 @@ int main(void)
 			SendChar('5');
 			SendChar('6');
 			SendChar('T');
+			stigao_flag=0;
 		}
 	}
 }

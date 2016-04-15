@@ -15,9 +15,9 @@
 #include "math.h"
 #include "Headers/funkcije.h"
 
-unsigned int X_Received;
-unsigned int Y_Received;
-unsigned int U_Received;
+signed long X_Received;
+signed long Y_Received;
+signed long U_Received;
 
 //Tajmer za rad drajvera
 ISR(TCE1_OVF_vect)	//1.5ms

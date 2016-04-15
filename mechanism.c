@@ -39,6 +39,7 @@ stop_PID_desni,
 set_direct_out,
 smer_zadati,
 stigao_flag = 0,
+stigao_sigurnosni = 0,
 struja_L,
 struja_R,
 //komunikacija
@@ -269,6 +270,7 @@ void Pracenje_pravca(void)
 	
 	if(rastojanje_cilj_temp > (metar / 10))  // metar/12
 	{
+		stigao_sigurnosni = 1;
 		rastojanje_cilj = rastojanje_cilj_temp;
 		translacija = 0;
 		vreme_pozicioniranja = 0;
@@ -311,7 +313,7 @@ void Pracenje_pravca(void)
 	}
 	else if (vreme_pozicioniranja >= 600)	//stigli smo do cilja
 	{
-		if (stigao_flag == 0)
+		if (stigao_flag == 0 && stigao_sigurnosni)
 		{
 			SendChar_USB('S');
 			SendChar_USB('t');
@@ -419,7 +421,7 @@ void PID_ugaoni(void)
 			//stigao_flag = 2;
 			vreme_cekanja_tete = 0;
 			modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
-			Kp_teta=Kp_teta_pravolinijski;
+			//Kp_teta=Kp_teta_pravolinijski;
 			
 			
 				// robot se krece pravolinijski

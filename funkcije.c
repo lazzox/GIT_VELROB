@@ -59,7 +59,7 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 	smer_zadati = dir;
 }
 
-void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao)
+void idi_pravo(signed long x, signed long y, signed long ugao)
 {
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
@@ -68,7 +68,7 @@ void idi_pravo(unsigned int x, unsigned int y, unsigned int ugao)
 	smer_zadati = 1;
 }
 
-void idi_unazad(unsigned int x, unsigned int y, unsigned int ugao)
+void idi_unazad(signed long x, signed long y, signed long ugao)
 {
 	//zadaj_X_Y_teta(0,0,0,1);
 	
@@ -251,28 +251,66 @@ void proba (void){
 			if(flag1 == 0){
 				stigao_flag = 0;
 				flag1 = 1;
-				idi_pravo(1000,0,0);
-				// zadaj_X_Y(-500,0,2);
+				idi_pravo(1100,0,0);
+				//zadaj_teta(90,0);
 				///sendChar('0');
 			}
 			else if(stigao_flag == 1){
 				step1++;
 				flag1 = 0;
+				sys_time=0;
 			}
 		break;
 		
 		case 1:
+		if(sys_time>1500){	
 			if(flag1 == 0){
 				stigao_flag = 0;
 				flag1 = 1;
-				idi_pravo(0,0,0);
+				idi_pravo(1600,0,0);
 				// zadaj_X_Y(-500,0,2);
 				//sendChar('1');
 			}
 			else if(stigao_flag == 1){
 				step1++;
 				flag1 = 0;
+				sys_time=0;
 			}
+		}
+		break;
+		
+		case 2:
+		if(sys_time>1500){
+			if(flag1 == 0){
+				stigao_flag = 0;
+				flag1 = 1;
+				idi_unazad(900,0,0);
+				// zadaj_X_Y(-500,0,2);
+				//sendChar('1');
+			}
+			else if(stigao_flag == 1){
+				step1++;
+				flag1 = 0;
+				sys_time=0;
+			}
+		}
+		break;
+		
+		case 3:
+		if(sys_time>1500){
+			if(flag1 == 0){
+				stigao_flag = 0;
+				flag1 = 1;
+				idi_unazad(0,0,0);
+				// zadaj_X_Y(-500,0,2);
+				//sendChar('1');
+			}
+			else if(stigao_flag == 1){
+				step1++;
+				flag1 = 0;
+				sys_time=0;
+			}
+		}
 		break;
 		
 		default:

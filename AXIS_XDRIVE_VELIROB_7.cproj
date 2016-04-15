@@ -13,7 +13,7 @@
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AssemblyName>XDRIVE_TIKVIC_V2.0</AssemblyName>
-    <Name>AXIS_XDRIVE_VELIROB</Name>
+    <Name>AXIS_XDRIVE_VELIROB_7</Name>
     <RootNamespace>XDRIVE_TIKVIC_V2.0</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>

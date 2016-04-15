@@ -1,7 +1,8 @@
-
-Microsoft Visual Studio Solution File, Format Version 11.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "AXIS_XDRIVE_VELIROB", "AXIS_XDRIVE_VELIROB_6_1(1).cproj", "{ECDCC1D1-B6C1-4CBB-92FD-3B1A42704562}"
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "AXIS_XDRIVE_VELIROB_7", "AXIS_XDRIVE_VELIROB_7.cproj", "{ECDCC1D1-B6C1-4CBB-92FD-3B1A42704562}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
