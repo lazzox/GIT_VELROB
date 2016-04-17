@@ -16,6 +16,7 @@ void zadaj_X_Y(signed long x, signed long y, unsigned char dir);
 void zadaj_teta(signed long teta_des, unsigned char dir);
 void idi_pravo(signed long x, signed long y, signed long ugao);
 void idi_unazad(signed long x, signed long y, signed long ugao);
+void zaustavi_se_u_mestu(void);
 
 
 void sendMsg(char *poruka);

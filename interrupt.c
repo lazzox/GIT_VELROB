@@ -86,9 +86,7 @@ ISR(USARTE0_RXC_vect)
 {
 	USART_RXComplete(&USART_E0_data);
 	receiveArray[RX_i_E0] = USART_RXBuffer_GetByte(&USART_E0_data);
-	//SendChar_USB((char)RX_i_E0);
 	//SendChar_USB(receiveArray[RX_i_E0]);
-	
 	RX_i_E0++;
 	vreme_primanja = 0;
 	if(RX_i_E0 > 7){ //Primljeni podaci i spremni za obradu
@@ -146,6 +144,16 @@ ISR(USARTE0_RXC_vect)
 				}else{
 					RX_i_E0 = 0;
 				}
+				
+				
+				case 'S':
+				if(receiveArray[7] == 'P'){
+					//parsiraj ovde sve
+					zaustavi_se_u_mestu();
+					RX_i_E0;
+				}
+				break;
+				
 				
 			case 'I':
 				if(receiveArray[5] == 'D'){

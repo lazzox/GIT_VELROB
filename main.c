@@ -161,5 +161,6 @@ int main(void)
 			SendChar('T');
 			stigao_flag=0;
 		}
+		
 	}
 }

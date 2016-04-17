@@ -61,6 +61,8 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 
 void idi_pravo(signed long x, signed long y, signed long ugao)
 {
+	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
+	
 	X_cilj = x * scale_factor_for_mm;
 	Y_cilj = y * scale_factor_for_mm;
 	
@@ -76,6 +78,27 @@ void idi_unazad(signed long x, signed long y, signed long ugao)
 	Y_cilj = y * scale_factor_for_mm;
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 2;
+}
+
+void zaustavi_se_u_mestu(void)
+{
+	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
+	
+	X_cilj=X_pos;
+	Y_cilj=Y_pos;
+	modifikovana_zeljena_pravolinijska_brzina=0;
+	//zeljena_brzina_okretanja=0;
+	//stigao_flag=0;
+	//set_direct_out=0;
+	//if (smer_zadati==1)
+	//{
+		//smer_zadati=2;
+	//}
+	//else if (smer_zadati=2)
+	//{
+		//smer_zadati=1;
+	//}
+		
 }
 
 void SendChar_USB(char c)
