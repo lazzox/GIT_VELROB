@@ -268,9 +268,8 @@ void Pracenje_pravca(void)
 	XY_zbir = X_razlika + Y_razlika;
 	rastojanje_cilj_temp = sqrt(XY_zbir);
 	
-	if(rastojanje_cilj_temp > (metar / 10))  // metar/12
+	if(rastojanje_cilj_temp > (metar / 12 ))  // metar/12
 	{
-		stigao_sigurnosni = 1;
 		rastojanje_cilj = rastojanje_cilj_temp;
 		translacija = 0;
 		vreme_pozicioniranja = 0;
@@ -311,15 +310,24 @@ void Pracenje_pravca(void)
 		if(teta_cilj < 0)
 			teta_cilj += krug360;
 	}
-	else if (vreme_pozicioniranja >= 600)	//stigli smo do cilja
+	else if (vreme_pozicioniranja>800)
 	{
-		if (stigao_flag == 0 && stigao_sigurnosni)
+		if (stigao_sigurnosni) 
+		{
+			stigao_sigurnosni=0;
+		}
+	}
+	else if (vreme_pozicioniranja >= 600 && !stigao_sigurnosni)	//stigli smo do cilja
+	{
+		if (stigao_flag == 0 )//&& stigao_sigurnosni)
 		{
 			SendChar_USB('S');
 			SendChar_USB('t');
 			SendChar_USB('t');
 			SendChar_USB('S');
 			stigao_flag = 1;
+			stigao_sigurnosni=0;
+			vreme_pozicioniranja=0;
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//O
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//K
 //  			USART_TXBuffer_PutByte(&USART_E0_data, 33);	//!
@@ -410,7 +418,7 @@ void PID_ugaoni(void)
 	//podesavanje pravca robota dok ne stigne u blizinu cilja
 	if(rastojanje_cilj_temp > (metar/10))  /// bilo /10 ? 
 	{
-		if(labs(teta_greska) > 500)	//okrecemo se u mestu kad treba
+		if(labs(teta_greska) > 1500)	//okrecemo se u mestu kad treba
 		{
 			modifikovana_zeljena_pravolinijska_brzina = 0;	//zaustavlja se robot za okretanje u mestu
 			rezervni_ugao = krug45/45;
@@ -498,13 +506,13 @@ void PID_brzinski(void)
 		PID_ukupni_R = -PWM_perioda;
 		
 	//levi motor
-	if (PID_ukupni_L > 1)/*if (PID_ukupni_L > 5)*/	//smer 1
+	if (PID_ukupni_L > 5)/*if (PID_ukupni_L > 5)*/	//smer 1
 	{
 		PORT_ClearPins(&PORTH, 0b00010000);	//IN_A2=0
 		PORT_SetPins(&PORTH, 0b10000000);	//IN_B2=1
 		TCF1.CCBBUF = PID_ukupni_L;
 	}
-	else if (PID_ukupni_L < -1)	//smer 2
+	else if (PID_ukupni_L < -5)	//smer 2
 	{
 		PORT_ClearPins(&PORTH, 0b10000000);	//IN_B2=0
 		PORT_SetPins(&PORTH, 0b00010000);	//IN_A2=1,
@@ -513,13 +521,13 @@ void PID_brzinski(void)
 	else	//kocenje
 		PORT_ClearPins(&PORTH, 0b10010000);	//IN_A2=0, IN_B2=0	
 	//desni motor
-	if (PID_ukupni_R > 1) //smer 1
+	if (PID_ukupni_R > 5) //smer 1
 	{
 		PORT_ClearPins(&PORTH, 0b00001000);	//IN_B1=0
 		PORT_SetPins(&PORTH, 0b00000001);	//IN_A1=1
 		TCF1.CCABUF = PID_ukupni_R;
 	}
-	else if (PID_ukupni_R < -1)	//smer 2
+	else if (PID_ukupni_R < -5)	//smer 2
 	{
 		PORT_ClearPins(&PORTH, 0b00000001);	//IN_A1=0
 		PORT_SetPins(&PORTH, 0b00001000);	//IN_B1=1

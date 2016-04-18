@@ -84,8 +84,9 @@ int main(void)
 	SendChar_USB(sizeof(long double));
 	SendChar_USB(sizeof(long long));
 	
+	//X_pos=600;
 	//idi_pravo(600,0,0);
-	//zadaj_teta(90,0);
+	//zadaj_teta(180,0);
 	
 	while(1)
 	{

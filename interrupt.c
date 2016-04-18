@@ -155,12 +155,7 @@ ISR(USARTE0_RXC_vect)
 				break;
 				
 				
-			case 'I':
-				if(receiveArray[5] == 'D'){
-					//parsiraj ovde sve
-					RX_i_E0;
-				}
-			break;
+			
 			
 			default:
 				RX_i_E0 = 0;

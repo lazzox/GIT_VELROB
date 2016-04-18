@@ -64,7 +64,7 @@ void idi_pravo(signed long x, signed long y, signed long ugao)
 	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
 	
 	X_cilj = x * scale_factor_for_mm;
-	Y_cilj = y * scale_factor_for_mm;
+	Y_cilj = -y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 1;
@@ -74,8 +74,11 @@ void idi_unazad(signed long x, signed long y, signed long ugao)
 {
 	//zadaj_X_Y_teta(0,0,0,1);
 	
+	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
+	
 	X_cilj = x * scale_factor_for_mm;
-	Y_cilj = y * scale_factor_for_mm;
+	Y_cilj = -y * scale_factor_for_mm;
+	
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 2;
 }
@@ -87,6 +90,7 @@ void zaustavi_se_u_mestu(void)
 	X_cilj=X_pos;
 	Y_cilj=Y_pos;
 	modifikovana_zeljena_pravolinijska_brzina=0;
+	stigao_sigurnosni=1;
 	//zeljena_brzina_okretanja=0;
 	//stigao_flag=0;
 	//set_direct_out=0;
@@ -274,7 +278,7 @@ void proba (void){
 			if(flag1 == 0){
 				stigao_flag = 0;
 				flag1 = 1;
-				idi_pravo(1100,0,0);
+				idi_unazad(750,0,0);
 				//zadaj_teta(90,0);
 				///sendChar('0');
 			}
@@ -286,41 +290,6 @@ void proba (void){
 		break;
 		
 		case 1:
-		if(sys_time>1500){	
-			if(flag1 == 0){
-				stigao_flag = 0;
-				flag1 = 1;
-				idi_pravo(1600,0,0);
-				// zadaj_X_Y(-500,0,2);
-				//sendChar('1');
-			}
-			else if(stigao_flag == 1){
-				step1++;
-				flag1 = 0;
-				sys_time=0;
-			}
-		}
-		break;
-		
-		case 2:
-		if(sys_time>1500){
-			if(flag1 == 0){
-				stigao_flag = 0;
-				flag1 = 1;
-				idi_unazad(900,0,0);
-				// zadaj_X_Y(-500,0,2);
-				//sendChar('1');
-			}
-			else if(stigao_flag == 1){
-				step1++;
-				flag1 = 0;
-				sys_time=0;
-			}
-		}
-		break;
-		
-		case 3:
-		if(sys_time>1500){
 			if(flag1 == 0){
 				stigao_flag = 0;
 				flag1 = 1;
@@ -333,8 +302,41 @@ void proba (void){
 				flag1 = 0;
 				sys_time=0;
 			}
-		}
 		break;
+		
+		//case 2:
+		//if(sys_time>1500){
+			//if(flag1 == 0){
+				//stigao_flag = 0;
+				//flag1 = 1;
+				//idi_unazad(900,0,0);
+				//// zadaj_X_Y(-500,0,2);
+				////sendChar('1');
+			//}
+			//else if(stigao_flag == 1){
+				//step1++;
+				//flag1 = 0;
+				//sys_time=0;
+			//}
+		//}
+		//break;
+		//
+		//case 3:
+		//if(sys_time>1500){
+			//if(flag1 == 0){
+				//stigao_flag = 0;
+				//flag1 = 1;
+				//idi_unazad(0,0,0);
+				//// zadaj_X_Y(-500,0,2);
+				////sendChar('1');
+			//}
+			//else if(stigao_flag == 1){
+				//step1++;
+				//flag1 = 0;
+				//sys_time=0;
+			//}
+		//}
+		//break;
 		
 		default:
 		break;

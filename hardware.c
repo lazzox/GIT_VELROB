@@ -24,11 +24,11 @@ void Podesi_Parametre_Robota(void)
 	krug90 =  krug360 >> 2;
 	krug45 =  krug360 >> 3;
 	krug180_PI = krug180 / M_PI;	
-	double flag_krug2 = atan2((double)(-500), (double)(-500));
-	flag_krug = (signed long)(flag_krug2 *krug180_PI);
+	//double flag_krug2 = atan2((double)(-500), (double)(-500));
+	//flag_krug = (signed long)(flag_krug2 *krug180_PI);
 
 	smer_zadati = 1;						//1-napred, 2-nazad, 0-sam bira smer
-	zeljena_pravolinijska_brzina = 450;		//brzina kojom se pravo krece robot
+	zeljena_pravolinijska_brzina = 350;		//brzina kojom se pravo krece robot
 	zeljena_brzina_okretanja = 300; //brzina kojom se okrece robot
 	max_brzina_motora = 800;				//eksperimentalno utvrdjena max brzina motora [impuls/vreme_odabiranja(3ms)] (max je oko 1000)
 	
@@ -41,21 +41,21 @@ void Podesi_PID_Pojacanja(void)
 {
 	//PID parametri
 	//Regulacija pravolinijskog kretanja
-	Kp_pravolinijski = 4;						//5
-	Ki_pravolinijski = 0;						//1
-	Kd_pravolinijski = 1;						//0.2
+	Kp_pravolinijski = 25;				//5		//5
+	Ki_pravolinijski = 0;				//0		//1
+	Kd_pravolinijski = 220;				//1		//0.2
 	//Kp_teta_pravolinijski = 20;					//20	isto kao Kp_teta
 	
 	//Regulacija ugaonog zakretanja
-	Kp_teta = 15.5;	//18
-	Ki_teta = 1.65;	//1.65
-	Kd_teta = 15;	//10
+	Kp_teta = 25;	//18		15.5
+	Ki_teta = 0;	//1.65		1.65
+	Kd_teta = 250;	//10		15
 	//Kp_teta_okretanje = 1.5;	//ne koristi se nigde u kodu :)
 
 	//Regulacija brzine
 	Kp_brzina = 0.4;	//0.4	//Ko menja Kp_brzina ovde treba da promeni i u mechanism.c, ne znam koja linija koda jer jox nema linije na svom kompu
-	Ki_brzina = 0.025;	//0.025
-	Kd_brzina = 0;		//1
+	Ki_brzina = 0;		//0.025
+	Kd_brzina = 0;		//0
 
 	//Ubrzavanje po rampi
 	Accel_PID_pos = 2;	//bilo 2
