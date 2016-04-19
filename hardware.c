@@ -28,7 +28,7 @@ void Podesi_Parametre_Robota(void)
 	//flag_krug = (signed long)(flag_krug2 *krug180_PI);
 
 	smer_zadati = 1;						//1-napred, 2-nazad, 0-sam bira smer
-	zeljena_pravolinijska_brzina = 350;		//brzina kojom se pravo krece robot
+	zeljena_pravolinijska_brzina = 250;		//brzina kojom se pravo krece robot
 	zeljena_brzina_okretanja = 300; //brzina kojom se okrece robot
 	max_brzina_motora = 800;				//eksperimentalno utvrdjena max brzina motora [impuls/vreme_odabiranja(3ms)] (max je oko 1000)
 	

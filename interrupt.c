@@ -105,7 +105,8 @@ ISR(USARTE0_RXC_vect)
 					U_Received = receiveArray[5] ;
 					U_Received <<=8;
 					U_Received |= receiveArray[6];
-		
+					
+					stigao_flag_sigurnosni = 1;
 					stigao_flag = 0;
 					vreme_primanja = 0;
 					idi_pravo(X_Received,Y_Received,U_Received);
@@ -135,6 +136,7 @@ ISR(USARTE0_RXC_vect)
 				U_Received <<=8;
 				U_Received |= receiveArray[6];
 				
+				stigao_flag_sigurnosni = 1;
 				stigao_flag = 0;
 				vreme_primanja = 0;
 				idi_unazad(X_Received,Y_Received,U_Received);
@@ -144,15 +146,35 @@ ISR(USARTE0_RXC_vect)
 				}else{
 					RX_i_E0 = 0;
 				}
-				
+				break;		
+					
+				case 'D': //A______X
+				if(receiveArray[7] == 'X'){ //idi u tacku primljeno!
+					//parsiraj ovde sve
+					X_Received = receiveArray[1];
+					X_Received <<=  8;
+					X_Received |= receiveArray[2];
+					
+					
+					stigao_flag = 0;
+					vreme_primanja = 0;
+					zeljena_pravolinijska_brzina=X_Received;
+		
+					okay_flag = 1;
+					}else{
+					RX_i_E0 = 0;
+				}
+				break;
 				
 				case 'S':
 				if(receiveArray[7] == 'P'){
-					//parsiraj ovde sve
 					zaustavi_se_u_mestu();
 					RX_i_E0;
 				}
 				break;
+				
+				
+				
 				
 				
 			

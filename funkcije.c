@@ -16,8 +16,8 @@
 #include "Headers/mechanism.h"
 #include "Headers/hardware.h"
 
-static char step1 = 0;
-static char flag1 = 0;
+volatile char step1 = 0;
+volatile char flag1 = 0;
 
 
 
@@ -61,10 +61,10 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 
 void idi_pravo(signed long x, signed long y, signed long ugao)
 {
-	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
+	//modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
 	
 	X_cilj = x * scale_factor_for_mm;
-	Y_cilj = -y * scale_factor_for_mm;
+	Y_cilj = y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 1;
@@ -74,10 +74,10 @@ void idi_unazad(signed long x, signed long y, signed long ugao)
 {
 	//zadaj_X_Y_teta(0,0,0,1);
 	
-	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
+	//modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
 	
 	X_cilj = x * scale_factor_for_mm;
-	Y_cilj = -y * scale_factor_for_mm;
+	Y_cilj = y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 2;
@@ -85,23 +85,13 @@ void idi_unazad(signed long x, signed long y, signed long ugao)
 
 void zaustavi_se_u_mestu(void)
 {
-	modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
 	
 	X_cilj=X_pos;
 	Y_cilj=Y_pos;
 	modifikovana_zeljena_pravolinijska_brzina=0;
-	stigao_sigurnosni=1;
 	//zeljena_brzina_okretanja=0;
 	//stigao_flag=0;
 	//set_direct_out=0;
-	//if (smer_zadati==1)
-	//{
-		//smer_zadati=2;
-	//}
-	//else if (smer_zadati=2)
-	//{
-		//smer_zadati=1;
-	//}
 		
 }
 
@@ -275,14 +265,19 @@ void proba (void){
 	switch(step1)
 	{
 		case 0:
-			if(flag1 == 0){
+			//SendChar_USB('C');
+			//SendChar_USB(flag1);
+			if(flag1 == 0)
+			{
+				SendChar_USB('C');
 				stigao_flag = 0;
 				flag1 = 1;
-				idi_unazad(750,0,0);
-				//zadaj_teta(90,0);
-				///sendChar('0');
+				idi_pravo(2000,0,0);
+				SendChar_USB(8);
 			}
-			else if(stigao_flag == 1){
+			else if(stigao_flag)
+			{
+				SendChar_USB('S');
 				step1++;
 				flag1 = 0;
 				sys_time=0;
@@ -290,14 +285,18 @@ void proba (void){
 		break;
 		
 		case 1:
+		SendChar_USB('C');
+		SendChar_USB('3');
 			if(flag1 == 0){
 				stigao_flag = 0;
 				flag1 = 1;
 				idi_unazad(0,0,0);
+				SendChar_USB('9');
 				// zadaj_X_Y(-500,0,2);
 				//sendChar('1');
 			}
 			else if(stigao_flag == 1){
+				SendChar_USB('T');
 				step1++;
 				flag1 = 0;
 				sys_time=0;
@@ -339,7 +338,7 @@ void proba (void){
 		//break;
 		
 		default:
-		break;
+			break;
 	}
 }
 
@@ -354,7 +353,7 @@ void kocka(void)
 			flag1 = 1;
 			idi_pravo(400,0,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('0');
+			//sendChar('0');
 		}
 		else if(stigao_flag == 1){
 			step1++;
@@ -367,9 +366,9 @@ void kocka(void)
 		if(flag1 == 0){
 			stigao_flag = 0;
 			flag1 = 1;
-			idi_pravo(400,400,0);
+			idi_pravo(400,-400,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('1');
+			//sendChar('1');
 		}
 		else if(stigao_flag == 1){
 			step1++;
@@ -383,9 +382,9 @@ void kocka(void)
 		if(flag1 == 0){
 			stigao_flag = 0;
 			flag1 = 1;
-			idi_pravo(0,400,0);
+			idi_pravo(0,-400,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('2');
+			//SendChar('2');
 		}
 		else if(stigao_flag == 1){
 			step1++;
@@ -401,7 +400,7 @@ void kocka(void)
 			flag1 = 1;
 			idi_pravo(0,0,0);
 			// zadaj_X_Y(-500,0,2);
-			sendChar('3');
+			//sendChar('3');
 		}
 		else if(stigao_flag == 1){
 			step1++;

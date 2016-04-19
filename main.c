@@ -56,7 +56,7 @@ int main(void)
 	int servo_counter = 0;
 	okay_flag = 0;
 	vreme_primanja = 0;
-	stigao_sigurnosni = 0;
+	stigao_flag_sigurnosni = 0;
 	
 	Podesi_Oscilator();					//podesavanje oscilatora
 	Podesi_Parametre_Robota();			//podesavanje broja impulsa u krugu
@@ -106,7 +106,7 @@ int main(void)
 	//---------------------------------------------------------------------//
 	//------------------------------TAKTIKA--------------------------------//
 	//---------------------------------------------------------------------//
-			//kocka();
+			// kocka();
 			//proba();
 	//---------------------------------------------------------------------//
 	//---------------TAKTIKA-----------------------------------------------//
@@ -161,6 +161,7 @@ int main(void)
 			SendChar('6');
 			SendChar('T');
 			stigao_flag=0;
+			stigao_flag_sigurnosni = 0;
 		}
 		
 	}

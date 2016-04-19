@@ -39,7 +39,7 @@ stop_PID_desni,
 set_direct_out,
 smer_zadati,
 stigao_flag = 0,
-stigao_sigurnosni,
+stigao_flag_sigurnosni,
 struja_L,
 struja_R,
 //komunikacija
@@ -268,7 +268,7 @@ void Pracenje_pravca(void)
 	XY_zbir = X_razlika + Y_razlika;
 	rastojanje_cilj_temp = sqrt(XY_zbir);
 	
-	if(rastojanje_cilj_temp > (metar / 12 ))  // metar/12
+	if(rastojanje_cilj_temp > (metar / 8 ))  // metar/12
 	{
 		rastojanje_cilj = rastojanje_cilj_temp;
 		translacija = 0;
@@ -310,30 +310,17 @@ void Pracenje_pravca(void)
 		if(teta_cilj < 0)
 			teta_cilj += krug360;
 	}
-	else if (vreme_pozicioniranja>800)
+
+	else if (vreme_pozicioniranja >= 600 )	//stigli smo do cilja
 	{
-		if (stigao_sigurnosni) 
+		if (!stigao_flag && stigao_flag_sigurnosni)
 		{
-			stigao_sigurnosni=0;
-		}
-	}
-	else if (vreme_pozicioniranja >= 600 && !stigao_sigurnosni)	//stigli smo do cilja
-	{
-		if (stigao_flag == 0 )//&& stigao_sigurnosni)
-		{
-			SendChar_USB('S');
-			SendChar_USB('t');
-			SendChar_USB('t');
-			SendChar_USB('S');
+			//SendChar_USB('S');
+			//SendChar_USB('t');
+			//SendChar_USB('t');
+			//SendChar_USB('S');
 			stigao_flag = 1;
-			stigao_sigurnosni=0;
 			vreme_pozicioniranja=0;
-//  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//O
-//  			USART_TXBuffer_PutByte(&USART_E0_data, 75);	//K
-//  			USART_TXBuffer_PutByte(&USART_E0_data, 33);	//!
-//  			USART_TXBuffer_PutByte(&USART_E1_data, 79);	//O
-//  			USART_TXBuffer_PutByte(&USART_E1_data, 75);	//K
-//  			USART_TXBuffer_PutByte(&USART_E1_data, 33);	//!
 		}
 		
 		if (teta_cilj_final != 0xFFFFFFFF)	//ako treba zauzmemo krajnji ugao
