@@ -106,6 +106,10 @@ ISR(USARTE0_RXC_vect)
 					U_Received <<=8;
 					U_Received |= receiveArray[6];
 					
+					X_Received -= 4000;
+					Y_Received -= 4000;
+					U_Received -= 720;
+					
 					stigao_flag_sigurnosni = 1;
 					stigao_flag = 0;
 					vreme_primanja = 0;
@@ -135,6 +139,10 @@ ISR(USARTE0_RXC_vect)
 				U_Received = receiveArray[5] ;
 				U_Received <<=8;
 				U_Received |= receiveArray[6];
+				
+				X_Received -= 4000;
+				Y_Received -= 4000;
+				U_Received -= 720;
 				
 				stigao_flag_sigurnosni = 1;
 				stigao_flag = 0;
