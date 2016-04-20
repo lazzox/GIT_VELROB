@@ -173,7 +173,30 @@ ISR(USARTE0_RXC_vect)
 				}
 				break;
 				
-				
+				case 'G': //G______S
+				if(receiveArray[7] == 'S'){ //idi u tacku primljeno!
+					X_Received = receiveArray[1];
+					X_Received <<=  8;
+					X_Received |= receiveArray[2];
+					
+					Y_Received = receiveArray [3];
+					Y_Received <<= 8;
+					Y_Received |= receiveArray[4];
+					
+					U_Received = receiveArray[5] ;
+					U_Received <<=8;
+					U_Received |= receiveArray[6];
+					
+					postavi_sistem(X_Received,Y_Received,U_Received);
+					
+					okay_flag = 1;
+					vreme_primanja=0;
+					RX_i_E0 = 0;
+				}
+				else {
+					RX_i_E0 = 0;
+				}
+				break;
 				
 				
 				

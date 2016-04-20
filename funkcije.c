@@ -21,7 +21,25 @@ volatile char flag1 = 0;
 
 
 
+void postavi_sistem(signed long x, signed long y, signed long ugao)
+{
+	X_pos = x * scale_factor_for_mm;
+	X_cilj = X_pos;
+	X_cilj_stari = X_pos;
+	
+	//Y_pos
+	//Y_pos = 0;
+	Y_pos = y * scale_factor_for_mm;
+	Y_cilj = Y_pos;
+	Y_cilj_stari = Y_pos;
+	
+	
+	teta = (ugao * krug360) / 360;
+	teta_cilj = teta;
+	teta_cilj_final = 0xFFFFFFFF;
+	teta_greska=0;
 
+}
 
 
 void nuliraj_poziciju_robota(void)

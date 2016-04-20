@@ -9,7 +9,7 @@
 #ifndef FUNKCIJE_H_
 #define FUNKCIJE_H_
 
-char proveri_poziciju(void);
+void postavi_sistem(signed long x, signed long y, signed long ugao);
 void nuliraj_poziciju_robota(void);
 void zadaj_X_Y_teta(signed long x, signed long y, signed long teta_des, unsigned char dir);
 void zadaj_X_Y(signed long x, signed long y, unsigned char dir);
