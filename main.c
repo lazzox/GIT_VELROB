@@ -64,30 +64,24 @@ int main(void)
 	PodesiADC();						//podesavanje AD konvertora
 	Podesi_Tajmere();					//podesavanje tajmera
 	Podesi_QDEC();						//podesavanje kvadraturnih dekodera
-	Podesi_PWM();						//podesavanje PWM signala za motore i servoe
+	Podesi_PWM();						//podesavanje PWM signala za motore i servo
 	Podesi_Interapt();					//podesavanje interapt prioriteta
 	Podesi_Pinove();					//podesavanje I/O pinova
 	Podesi_USART_Komunikaciju();		//podesavanje komunikacije
 	//inicijalizuj_servo_tajmer_20ms();	//Inicijalizuje tajmer za servoe
 	//Kada se inicijalizuje ovaj tajmer prestane da radi USART za komunikaciju!
 	
+	//nuliraj_poziciju_robota(); 
 	_delay_ms(1000);					//cekanje da se stabilizuje sistem
-	nuliraj_poziciju_robota(); 	
-	
+	//postavi_sistem(210,1020,90);	
+
 	SendChar_USB('U');
 	SendChar_USB('U');
 	SendChar_USB('U');
 	
-	SendChar_USB(sizeof(int));
-	SendChar_USB(sizeof(long));
-	SendChar_USB(sizeof(double));
-	SendChar_USB(sizeof(long double));
-	SendChar_USB(sizeof(long long));
-	
-	//X_pos=600;
-	//idi_pravo(600,0,0);
-	//zadaj_teta(180,0);
-	
+	//idi_pravo(510,1020,0);
+	//stigao_flag_sigurnosni = 1;
+		
 	while(1)
 	{
 		//CHECK PGM MODE - Uvek mora biti ispred svega!
@@ -106,7 +100,8 @@ int main(void)
 	//---------------------------------------------------------------------//
 	//------------------------------TAKTIKA--------------------------------//
 	//---------------------------------------------------------------------//
-			// kocka();
+			 //kocka();
+			// kocka_poy();
 			//proba();
 	//---------------------------------------------------------------------//
 	//---------------TAKTIKA-----------------------------------------------//
@@ -124,6 +119,21 @@ int main(void)
 			servo_counter++;
 			Pracenje_Pravca_sample_counter = 0;
 			Pracenje_pravca();
+			
+			//SendChar('X');
+			//SendChar('X');
+			//SendChar('X');
+			//SendChar(X_pos>>24);
+			//SendChar(X_pos>>16);
+			//SendChar(X_pos>>8);
+			//SendChar(X_pos);
+			//
+			//SendChar('Y');
+			//SendChar(Y_pos>>24);
+			//SendChar(Y_pos>>16);
+			//SendChar(Y_pos>>8);
+			//SendChar(Y_pos);
+			
 		}
 		
 		//PID regulacija
@@ -162,6 +172,69 @@ int main(void)
 			SendChar('T');
 			stigao_flag=0;
 			stigao_flag_sigurnosni = 0;
+			//SendChar('X');
+			//SendChar('X');
+			//SendChar('X');
+			//SendChar(X_pos>>24);
+			//SendChar(X_pos>>16);
+			//SendChar(X_pos>>8);
+			//SendChar(X_pos);
+			//
+			//SendChar(X_cilj>>24);
+			//SendChar(X_cilj>>16);
+			//SendChar(X_cilj>>8);
+			//SendChar(X_cilj);
+			//
+			//SendChar(X_cilj_stari>>24);
+			//SendChar(X_cilj_stari>>16);
+			//SendChar(X_cilj_stari>>8);
+			//SendChar(X_cilj_stari);
+			//
+			//SendChar('Y');
+			//SendChar(Y_pos>>24);
+			//SendChar(Y_pos>>16);
+			//SendChar(Y_pos>>8);
+			//SendChar(Y_pos);
+			//
+			//SendChar(Y_cilj>>24);
+			//SendChar(Y_cilj>>16);
+			//SendChar(Y_cilj>>8);
+			//SendChar(Y_cilj);
+			//
+			//SendChar(Y_cilj_stari>>24);
+			//SendChar(Y_cilj_stari>>16);
+			//SendChar(Y_cilj_stari>>8);
+			//SendChar(Y_cilj_stari);
+			//SendChar('z');
+			//
+			//SendChar(teta>>24);
+			//SendChar(teta>>16);
+			//SendChar(teta>>8);
+			//SendChar(teta);
+			//
+			//SendChar(teta_cilj>>24);
+			//SendChar(teta_cilj>>16);
+			//SendChar(teta_cilj>>8);
+			//SendChar(teta_cilj);
+				//
+				//
+				//
+			//SendChar(teta_cilj_final>>24);
+			//SendChar(teta_cilj_final>>16);
+			//SendChar(teta_cilj_final>>8);
+			//SendChar(teta_cilj_final);
+			//
+			//SendChar(teta_greska>>24);
+			//SendChar(teta_greska>>16);
+			//SendChar(teta_greska>>8);
+			//SendChar(teta_greska);
+			//
+			//
+			//
+			//SendChar('X');
+			//SendChar('X');
+			//SendChar('X');
+			
 		}
 		
 	}

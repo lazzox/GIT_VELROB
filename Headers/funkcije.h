@@ -9,15 +9,17 @@
 #ifndef FUNKCIJE_H_
 #define FUNKCIJE_H_
 
-void postavi_sistem(signed long x, signed long y, signed long ugao);
 void nuliraj_poziciju_robota(void);
+
+void postavi_sistem(signed long x, signed long y, signed long ugao);
+
 void zadaj_X_Y_teta(signed long x, signed long y, signed long teta_des, unsigned char dir);
 void zadaj_X_Y(signed long x, signed long y, unsigned char dir);
 void zadaj_teta(signed long teta_des, unsigned char dir);
 void idi_pravo(signed long x, signed long y, signed long ugao);
 void idi_unazad(signed long x, signed long y, signed long ugao);
 void zaustavi_se_u_mestu(void);
-
+void kocka_poy(void);
 
 void sendMsg(char *poruka);
 void SendChar(char c);

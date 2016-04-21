@@ -20,10 +20,10 @@ void Podesi_Parametre_Robota(void)
 	krug360 = 53250;	//54000	joxo-valja pogledati jos jednom											//49650 - eksperiment 1;  //66250 - matematika;	//broj inkremenata za jedan krug - eksperiment!		//13653
 	
 	scale_factor_for_mm = metar / 1000;
-	krug180 = krug360 >> 1;	
+	krug180 = krug360 >> 1;
 	krug90 =  krug360 >> 2;
 	krug45 =  krug360 >> 3;
-	krug180_PI = krug180 / M_PI;	
+	krug180_PI = krug180 / M_PI;
 	//double flag_krug2 = atan2((double)(-500), (double)(-500));
 	//flag_krug = (signed long)(flag_krug2 *krug180_PI);
 
@@ -33,7 +33,7 @@ void Podesi_Parametre_Robota(void)
 	max_brzina_motora = 800;				//eksperimentalno utvrdjena max brzina motora [impuls/vreme_odabiranja(3ms)] (max je oko 1000)
 	
 	modifikovana_zeljena_pravolinijska_brzina = zeljena_pravolinijska_brzina;
-	rezervni_ugao = krug45/45;		//vrednost ugaone greske preko koje se radi reorijentacija robota  
+	rezervni_ugao = krug45/45;		//vrednost ugaone greske preko koje se radi reorijentacija robota
 	PWM_perioda = 800;			//PWM tajmer broji do 800 - frekvenicja 20KHz
 }
 
@@ -63,7 +63,7 @@ void Podesi_PID_Pojacanja(void)
 
 void Podesi_QDEC(void)
 {
-	//enkoderski ulazi
+	//enkoderski ulazi 
 	PORT_ConfigurePins( &PORTD, 0xFF, false, false, PORT_OPC_PULLUP_gc, PORT_ISC_FALLING_gc);
 	PORT_SetPinsAsInput( &PORTD, 0xFF );
 	

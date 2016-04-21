@@ -38,6 +38,7 @@ stop_PID_levi,
 stop_PID_desni,
 set_direct_out,
 smer_zadati,
+pravo2_flag,
 stigao_flag = 0,
 stigao_flag_sigurnosni,
 struja_L,
@@ -95,6 +96,7 @@ scale_factor_for_mm,
 vreme_cekanja_tete,
 vreme_pozicioniranja,
 sys_time,
+ugao_timer,
 Accel_PID_pos,
 meca;
 
@@ -268,17 +270,18 @@ void Pracenje_pravca(void)
 	XY_zbir = X_razlika + Y_razlika;
 	rastojanje_cilj_temp = sqrt(XY_zbir);
 	
-	if(rastojanje_cilj_temp > (metar / 8 ))  // metar/12
+	if(rastojanje_cilj_temp > (metar / 10 ))  // metar/12
 	{
 		rastojanje_cilj = rastojanje_cilj_temp;
 		translacija = 0;
 		vreme_pozicioniranja = 0;
 		stigao_flag = 0;
+		//stigao_flag_sigurnosni = 1;
 		
 		X_razlika = (X_cilj - X_pos);
 		Y_razlika = (Y_cilj - Y_pos);
 		teta_cilj_radian = atan2((double)(Y_razlika), (double)(X_razlika));
-		
+	
 		teta_cilj = (signed long)(teta_cilj_radian *krug180_PI);
 	
 		
@@ -322,12 +325,13 @@ void Pracenje_pravca(void)
 			stigao_flag = 1;
 			vreme_pozicioniranja=0;
 		}
-		
 		if (teta_cilj_final != 0xFFFFFFFF)	//ako treba zauzmemo krajnji ugao
 		{
-			teta_cilj = teta_cilj_final;
-			teta_cilj_final = 0xFFFFFFFF;	//postavlja se na FF, da sledeci put ne bi se izvrsavao
-		}		
+			
+				teta_cilj = teta_cilj_final;
+				teta_cilj_final = 0xFFFFFFFF;
+		}
+		
 	}
 }
 
@@ -405,8 +409,9 @@ void PID_ugaoni(void)
 	//podesavanje pravca robota dok ne stigne u blizinu cilja
 	if(rastojanje_cilj_temp > (metar/10))  /// bilo /10 ? 
 	{
-		if(labs(teta_greska) > 1500)	//okrecemo se u mestu kad treba
+		if(labs(teta_greska) > 500)	//okrecemo se u mestu kad treba
 		{
+			Kp_teta=Kp_teta_okretanje;
 			modifikovana_zeljena_pravolinijska_brzina = 0;	//zaustavlja se robot za okretanje u mestu
 			rezervni_ugao = krug45/45;
 			vreme_cekanja_tete = 0;
@@ -416,7 +421,7 @@ void PID_ugaoni(void)
 			//stigao_flag = 2;
 			vreme_cekanja_tete = 0;
 			modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
-			//Kp_teta=Kp_teta_pravolinijski;
+			Kp_teta=Kp_teta_pravolinijski;
 			
 			
 				// robot se krece pravolinijski
@@ -493,13 +498,13 @@ void PID_brzinski(void)
 		PID_ukupni_R = -PWM_perioda;
 		
 	//levi motor
-	if (PID_ukupni_L > 5)/*if (PID_ukupni_L > 5)*/	//smer 1
+	if (PID_ukupni_L > 2)/*if (PID_ukupni_L > 5)*/	//smer 1
 	{
 		PORT_ClearPins(&PORTH, 0b00010000);	//IN_A2=0
 		PORT_SetPins(&PORTH, 0b10000000);	//IN_B2=1
 		TCF1.CCBBUF = PID_ukupni_L;
 	}
-	else if (PID_ukupni_L < -5)	//smer 2
+	else if (PID_ukupni_L < -2)	//smer 2
 	{
 		PORT_ClearPins(&PORTH, 0b10000000);	//IN_B2=0
 		PORT_SetPins(&PORTH, 0b00010000);	//IN_A2=1,
@@ -508,13 +513,13 @@ void PID_brzinski(void)
 	else	//kocenje
 		PORT_ClearPins(&PORTH, 0b10010000);	//IN_A2=0, IN_B2=0	
 	//desni motor
-	if (PID_ukupni_R > 5) //smer 1
+	if (PID_ukupni_R > 2) //smer 1
 	{
 		PORT_ClearPins(&PORTH, 0b00001000);	//IN_B1=0
 		PORT_SetPins(&PORTH, 0b00000001);	//IN_A1=1
 		TCF1.CCABUF = PID_ukupni_R;
 	}
-	else if (PID_ukupni_R < -5)	//smer 2
+	else if (PID_ukupni_R < -2)	//smer 2
 	{
 		PORT_ClearPins(&PORTH, 0b00000001);	//IN_A1=0
 		PORT_SetPins(&PORTH, 0b00001000);	//IN_B1=1
