@@ -43,13 +43,13 @@ void nuliraj_poziciju_robota(void)
 
 void postavi_sistem(signed long x, signed long y, signed long ugao)
 {
-	X_pos = -x * scale_factor_for_mm;
+	X_pos = x * scale_factor_for_mm;
 	X_cilj = X_pos;
 	X_cilj_stari = X_pos;
 	
 	//Y_pos
 	//Y_pos = 0;
-	Y_pos = -y * scale_factor_for_mm;
+	Y_pos = y * scale_factor_for_mm;
 	Y_cilj = Y_pos;
 	Y_cilj_stari = Y_pos;
 	
@@ -85,18 +85,18 @@ void zadaj_teta(signed long teta_des, unsigned char dir)
 void idi_pravo(signed long x, signed long y, signed long ugao)
 {
 	//modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
-	X_cilj = -x * scale_factor_for_mm;
-	Y_cilj = -y * scale_factor_for_mm;
+	X_cilj = x * scale_factor_for_mm;
+	Y_cilj = y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
-	smer_zadati = 2;
+	smer_zadati = 1;
 }
 
 void idi_pravo2(signed long x, signed long y)
 {
 	//modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
-	X_cilj = -x * scale_factor_for_mm;
-	Y_cilj = -y * scale_factor_for_mm;
+	X_cilj = x * scale_factor_for_mm;
+	Y_cilj = y * scale_factor_for_mm;
 	ugao_timer=0;
 	pravo2_flag=1;
 	smer_zadati = 2;
@@ -111,7 +111,7 @@ void idi_unazad(signed long x, signed long y, signed long ugao)
 	Y_cilj = -y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
-	smer_zadati = 1;
+	smer_zadati = 2;
 }
 
 void zaustavi_se_u_mestu(void)
@@ -304,7 +304,7 @@ void proba (void){
 				SendChar_USB('C');
 				stigao_flag = 0;
 				flag1 = 1;
-				idi_pravo(2000,0,0);
+				idi_pravo(1000,0,0);
 				SendChar_USB(8);
 			}
 			else if(stigao_flag)
@@ -316,24 +316,24 @@ void proba (void){
 			}
 		break;
 		
-		case 1:
-		SendChar_USB('C');
-		SendChar_USB('3');
-			if(flag1 == 0){
-				stigao_flag = 0;
-				flag1 = 1;
-				idi_unazad(0,0,0);
-				SendChar_USB('9');
-				// zadaj_X_Y(-500,0,2);
-				//sendChar('1');
-			}
-			else if(stigao_flag == 1){
-				SendChar_USB('T');
-				step1++;
-				flag1 = 0;
-				sys_time=0;
-			}
-		break;
+// 		case 1:
+// 		SendChar_USB('C');
+// 		SendChar_USB('3');
+// 			if(flag1 == 0){
+// 				stigao_flag = 0;
+// 				flag1 = 1;
+// 				idi_unazad(0,0,0);
+// 				SendChar_USB('9');
+// 				// zadaj_X_Y(-500,0,2);
+// 				//sendChar('1');
+// 			}
+// 			else if(stigao_flag == 1){
+// 				SendChar_USB('T');
+// 				step1++;
+// 				flag1 = 0;
+// 				sys_time=0;
+// 			}
+// 		break;
 		
 		//case 2:
 		//if(sys_time>1500){

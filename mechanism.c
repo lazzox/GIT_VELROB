@@ -407,7 +407,7 @@ void PID_ugaoni(void)
 		teta_greska_sum = -200;
 	
 	//podesavanje pravca robota dok ne stigne u blizinu cilja
-	if(rastojanje_cilj_temp > (metar/10))  /// bilo /10 ? 
+	if(rastojanje_cilj_temp > (metar/5))  /// bilo /10 ? 
 	{
 		if(labs(teta_greska) > 500)	//okrecemo se u mestu kad treba
 		{

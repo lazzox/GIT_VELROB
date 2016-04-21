@@ -71,7 +71,7 @@ int main(void)
 	//inicijalizuj_servo_tajmer_20ms();	//Inicijalizuje tajmer za servoe
 	//Kada se inicijalizuje ovaj tajmer prestane da radi USART za komunikaciju!
 	
-	//nuliraj_poziciju_robota(); 
+	nuliraj_poziciju_robota(); 
 	_delay_ms(1000);					//cekanje da se stabilizuje sistem
 	//postavi_sistem(210,1020,90);	
 
@@ -79,8 +79,9 @@ int main(void)
 	SendChar_USB('U');
 	SendChar_USB('U');
 	
-	//idi_pravo(510,1020,0);
-	//stigao_flag_sigurnosni = 1;
+
+// 	idi_pravo(300,500,90);
+// 	stigao_flag_sigurnosni = 1;
 		
 	while(1)
 	{
@@ -89,10 +90,10 @@ int main(void)
 			set_direct_out = 1;
 			PID_brzina_L = 0;
 			PID_brzina_R = 0;
-				if (!PRG_flag){
-					sendMsg("PGM_Mode");
-					PRG_flag = 1;
-				}
+			if (!PRG_flag){
+				sendMsg("PGM_Mode");
+				PRG_flag = 1;
+			}
 			_delay_ms(500);
 		}
 		set_direct_out = PRG_flag = 0;
@@ -119,21 +120,6 @@ int main(void)
 			servo_counter++;
 			Pracenje_Pravca_sample_counter = 0;
 			Pracenje_pravca();
-			
-			//SendChar('X');
-			//SendChar('X');
-			//SendChar('X');
-			//SendChar(X_pos>>24);
-			//SendChar(X_pos>>16);
-			//SendChar(X_pos>>8);
-			//SendChar(X_pos);
-			//
-			//SendChar('Y');
-			//SendChar(Y_pos>>24);
-			//SendChar(Y_pos>>16);
-			//SendChar(Y_pos>>8);
-			//SendChar(Y_pos);
-			
 		}
 		
 		//PID regulacija
@@ -172,69 +158,6 @@ int main(void)
 			SendChar('T');
 			stigao_flag=0;
 			stigao_flag_sigurnosni = 0;
-			//SendChar('X');
-			//SendChar('X');
-			//SendChar('X');
-			//SendChar(X_pos>>24);
-			//SendChar(X_pos>>16);
-			//SendChar(X_pos>>8);
-			//SendChar(X_pos);
-			//
-			//SendChar(X_cilj>>24);
-			//SendChar(X_cilj>>16);
-			//SendChar(X_cilj>>8);
-			//SendChar(X_cilj);
-			//
-			//SendChar(X_cilj_stari>>24);
-			//SendChar(X_cilj_stari>>16);
-			//SendChar(X_cilj_stari>>8);
-			//SendChar(X_cilj_stari);
-			//
-			//SendChar('Y');
-			//SendChar(Y_pos>>24);
-			//SendChar(Y_pos>>16);
-			//SendChar(Y_pos>>8);
-			//SendChar(Y_pos);
-			//
-			//SendChar(Y_cilj>>24);
-			//SendChar(Y_cilj>>16);
-			//SendChar(Y_cilj>>8);
-			//SendChar(Y_cilj);
-			//
-			//SendChar(Y_cilj_stari>>24);
-			//SendChar(Y_cilj_stari>>16);
-			//SendChar(Y_cilj_stari>>8);
-			//SendChar(Y_cilj_stari);
-			//SendChar('z');
-			//
-			//SendChar(teta>>24);
-			//SendChar(teta>>16);
-			//SendChar(teta>>8);
-			//SendChar(teta);
-			//
-			//SendChar(teta_cilj>>24);
-			//SendChar(teta_cilj>>16);
-			//SendChar(teta_cilj>>8);
-			//SendChar(teta_cilj);
-				//
-				//
-				//
-			//SendChar(teta_cilj_final>>24);
-			//SendChar(teta_cilj_final>>16);
-			//SendChar(teta_cilj_final>>8);
-			//SendChar(teta_cilj_final);
-			//
-			//SendChar(teta_greska>>24);
-			//SendChar(teta_greska>>16);
-			//SendChar(teta_greska>>8);
-			//SendChar(teta_greska);
-			//
-			//
-			//
-			//SendChar('X');
-			//SendChar('X');
-			//SendChar('X');
-			
 		}
 		
 	}
