@@ -276,8 +276,25 @@ ISR(USARTE0_RXC_vect)
 				}
 				break;
 				
-				
-				
+				case 'K': //A______X
+				if(receiveArray[7] == 'M'){
+					//parsiraj ovde sve
+					
+					kraj_meca=1;
+					SendChar('O');
+					SendChar('1');
+					SendChar('2');
+					SendChar('3');
+					SendChar('4');
+					SendChar('5');
+					SendChar('6');
+					SendChar('K');
+					okay_flag = 1;
+				}
+				else {
+					RX_i_E0 = 0;
+				}
+				break;
 			
 			
 			default:

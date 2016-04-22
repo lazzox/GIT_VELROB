@@ -41,24 +41,24 @@ void Podesi_PID_Pojacanja(void)
 {
 	//PID parametri
 	//Regulacija pravolinijskog kretanja
-	Kp_pravolinijski = 8;				//5		//5
-	Ki_pravolinijski = 0;				//0		//1
-	Kd_pravolinijski = 159;				//1		//0.2
-	Kp_teta_pravolinijski = 19;					//20	isto kao Kp_teta
+	Kp_pravolinijski = 10;				//5		//5							4
+	Ki_pravolinijski = 0;				//0		//1							0.11
+	Kd_pravolinijski = 100;				//1		//0.2						200
+	Kp_teta_pravolinijski = 15;					//20	isto kao Kp_teta	25
 	
 	//Regulacija ugaonog zakretanja
-	Kp_teta = 12;	//18		15.5
-	Ki_teta = 0;	//1.65		1.65
-	Kd_teta = 100;	//10		15
-	Kp_teta_okretanje = 12;	//ne koristi se nigde u kodu :)
+	Kp_teta = 12;	//18		15.5										18
+	Ki_teta = 0;	//1.65		1.65										0		
+	Kd_teta = 50;	//10		15											100
+	Kp_teta_okretanje = 15;	//ne koristi se nigde u kodu :)					25	
 
 	//Regulacija brzine
-	Kp_brzina = 0.28;	//0.4	//Ko menja Kp_brzina ovde treba da promeni i u mechanism.c, ne znam koja linija koda jer jox nema linije na svom kompu
-	Ki_brzina = 0;		//0.025
-	Kd_brzina = 0.9;		//0
+	Kp_brzina = 0.3;	//0.3	//Ko menja Kp_brzina ovde treba da promeni i u mechanism.c, ne znam koja linija koda jer jox nema linije na svom kompu			0.35					
+	Ki_brzina = 0;		//0.025																																	0.005
+	Kd_brzina = 0.4;		//01.85																																	1.22
 
 	//Ubrzavanje po rampi
-	Accel_PID_pos = 3;	//bilo 2
+	Accel_PID_pos = 2;	//bilo 2																																5	
 }
 
 void Podesi_QDEC(void)

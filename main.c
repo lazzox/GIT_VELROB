@@ -57,6 +57,7 @@ int main(void)
 	okay_flag = 0;
 	vreme_primanja = 0;
 	stigao_flag_sigurnosni = 0;
+	kraj_meca = 0;
 	
 	Podesi_Oscilator();					//podesavanje oscilatora
 	Podesi_Parametre_Robota();			//podesavanje broja impulsa u krugu
@@ -79,7 +80,6 @@ int main(void)
 	SendChar_USB('U');
 	SendChar_USB('U');
 	
-
 // 	idi_pravo(300,500,90);
 // 	stigao_flag_sigurnosni = 1;
 		
@@ -130,11 +130,6 @@ int main(void)
 			//PID_brzinski se poziva direktno u interaptu sistemskog tajmera TCE1!
 		}
 		
-		//if(vreme_primanja > 200){
-			//vreme_primanja = 0;
-			//RX_i_E0 = 0;
-		//}
-		
 		if (okay_flag == 1){
 			SendChar('O');
 			SendChar('1');
@@ -145,6 +140,20 @@ int main(void)
 			SendChar('6');
 			SendChar('K');
 			okay_flag = 0;
+		}
+		
+		while (kraj_meca)
+		{
+			nuliraj_poziciju_robota();
+			set_direct_out = 1;
+			PID_ukupni_L = 0;
+			PID_ukupni_R = 0;
+			zeljena_brzina_okretanja=0;
+			zeljena_pravolinijska_brzina=0;
+			Kp_teta=0;
+			Kd_teta=0;
+			//  cli();
+			   
 		}
 		
 		if (stigao_flag == 1){
@@ -159,6 +168,9 @@ int main(void)
 			stigao_flag=0;
 			stigao_flag_sigurnosni = 0;
 		}
+		
+		
+		
 		
 	}
 }

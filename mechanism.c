@@ -47,6 +47,7 @@ struja_R,
 sendArray[128],
 receiveArray[128],
 vreme_primanja,
+kraj_meca,
 okay_flag,
 CHC,
 RX_i_E0,
@@ -270,7 +271,7 @@ void Pracenje_pravca(void)
 	XY_zbir = X_razlika + Y_razlika;
 	rastojanje_cilj_temp = sqrt(XY_zbir);
 	
-	if(rastojanje_cilj_temp > (metar / 10 ))  // metar/12
+	if(rastojanje_cilj_temp > (metar / 5 ))  // metar/12
 	{
 		rastojanje_cilj = rastojanje_cilj_temp;
 		translacija = 0;

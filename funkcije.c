@@ -107,8 +107,8 @@ void idi_unazad(signed long x, signed long y, signed long ugao)
 	//zadaj_X_Y_teta(0,0,0,1);
 	
 	//modifikovana_zeljena_pravolinijska_brzina=zeljena_pravolinijska_brzina;
-	X_cilj = -x * scale_factor_for_mm;
-	Y_cilj = -y * scale_factor_for_mm;
+	X_cilj = x * scale_factor_for_mm;
+	Y_cilj = y * scale_factor_for_mm;
 	
 	teta_cilj_final = (ugao * krug360) / 360;
 	smer_zadati = 2;
